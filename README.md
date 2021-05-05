@@ -26,6 +26,7 @@ console.log(networkInterfaces);
 * Photos - [exif](https://www.npmjs.com/package/exifr)
 * weather - https://openweathermap.org/
 * map - https://www.openstreetmap.org/#map=5/38.007/-95.844
-* news - https://opennews.org/
+* news - https://newsapi.org/account
 * Music - spotify
 * ip - https://freegeoip.app/
+* oauth in electron - https://medium.com/linagora-engineering/using-oauth-in-an-electron-application-abb0376c2ae0

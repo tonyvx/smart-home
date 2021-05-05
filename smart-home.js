@@ -1,46 +1,26 @@
 require("v8-compile-cache");
-const {
-  app,
-  BrowserWindow,
-  Menu,
-  ipcMain,
-  dialog,
-  Notification,
-} = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, Notification } = require("electron");
 const path = require("path");
 const contextMenu = require("electron-context-menu");
-const ipLocation = require("geoip-lite");
 
 var weather = require("openweather-apis");
 var cron = require("node-cron");
 let location = {};
 
 const { getIPLocation } = require("./lib/getIPLocation");
-const { get } = require("http");
-const { getFormattedTime } = require("./lib/getFormattedTime");
+const { getNews } = require("./lib/getNews");
+const { getForecast } = require("./lib/getForecast");
 
-weather.setLang("en");
-// English - en, Russian - ru, Italian - it, Spanish - es (or sp),
-// Ukrainian - uk (or ua), German - de, Portuguese - pt,Romanian - ro,
-// Polish - pl, Finnish - fi, Dutch - nl, French - fr, Bulgarian - bg,
-// Swedish - sv (or se), Chinese Tra - zh_tw, Chinese Sim - zh (or zh_cn),
-// Turkish - tr, Croatian - hr, Catalan - ca
-
-// set city by name
-// weather.setCity("Fairplay");
-// or set the coordinates (latitude,longitude)
-
-// or set city by ID (recommended by OpenWeatherMap)
-// weather.setCityId(4367872);
-
-// or set zip code
-// weather.setZipCode(33615);
-
-// 'metric'  'internal'  'imperial'
-weather.setUnits("imperial");
-
-// check http://openweathermap.org/appid#get for get the APPID
-weather.setAPPID("c5f5e17c931ac0a299b73985af539dc4");
+const electronOauth2 = require("electron-oauth2");
+const oauthConfig = require("./security/spotify/config").oauth;
+const windowParams = {
+  alwaysOnTop: true,
+  autoHideMenuBar: true,
+  webPreferences: {
+    nodeIntegration: false,
+  },
+};
+const spotifyOAuth = electronOauth2(oauthConfig, windowParams);
 
 contextMenu({});
 
@@ -49,7 +29,6 @@ contextMenu({});
 let mainWindow;
 function createWindow() {
   mainWindow = new BrowserWindow({
-    // titleBarStyle: "hidden",
     width: 1024,
     height: 600,
     webPreferences: {
@@ -69,11 +48,12 @@ function createWindow() {
 
   mainWindow.loadFile("public/index.html");
 
-  // const ip = await ;
   mainWindow.webContents.on("did-finish-load", async () => {
     location = await getIPLocation();
+    const news = await getNews();
 
     console.log(location);
+    console.log(news);
 
     let footerInfo = ["chrome", "node", "electron"].reduce((a, v) => {
       a[v] = process.versions[v];
@@ -85,9 +65,10 @@ function createWindow() {
     mainWindow.webContents.send("fromMain_FinishLoad", {
       footerInfo,
       location,
+      news,
     });
 
-    const forecast = await getForecast();
+    const forecast = await getForecast(location["zip_code"]);
     mainWindow.webContents.send("fromMain_Interval", forecast);
   });
 
@@ -121,62 +102,29 @@ const sendMessage = (message) => {
     body: message,
   }).show();
 };
-function getForecast() {
-  weather.setZipCode(location["zip_code"]);
-  return new Promise((resolve, reject) =>
-    weather.getAllWeather(function (err, JSONObj) {
-      console.log(JSONObj);
-      resolve({
-        weather: {
-          ...JSONObj.main,
-          description:
-            JSONObj.weather[0].main + ", " + JSONObj.weather[0].description,
-          icon: JSONObj.weather[0].icon,
-        },
-        wind: JSONObj.wind,
-        sunrise: getTimeStamp(JSONObj.sys.sunrise),
-        sunset: getTimeStamp(JSONObj.sys.sunset),
-      });
-    })
-  );
-}
-
 function submenu(mainWindow2) {
   return [
     {
-      label: "View Registered Parishioners",
+      label: "Connect Spotify",
       async click() {
-        sendMessage("hi");
+        console.log("toMain_spotify_oauth");
+        spotifyOAuth.getAccessToken({}).then(
+          (token) => {
+            // event.sender.send('github-oauth-reply', token);
+            console.log(token);
+          },
+          (err) => {
+            console.log("Error while getting token", err);
+          }
+        );
       },
     },
   ];
 }
 
-const getTimeStamp = (unixTime) => {
-  let unix_timestamp = unixTime;
-  // Create a new JavaScript Date object based on the timestamp
-  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-  var date = new Date(unix_timestamp * 1000);
-
-  return getFormattedTime(date);
-  // // Hours part from the timestamp
-  // var hours = date.getHours();
-  // // Minutes part from the timestamp
-  // var minutes = "0" + date.getMinutes();
-  // // Seconds part from the timestamp
-  // var seconds = "0" + date.getSeconds();
-
-  // // Will display time in 10:30:23 format
-  // var formattedTime =
-  //   hours + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
-
-  // console.log(formattedTime);
-  // return formattedTime;
-};
-
 cron.schedule("*/1 * * * *", async () => {
   weather.setZipCode(location["zip_code"]);
-  const forecast = await getForecast();
+  const forecast = await getForecast(location["zip_code"]);
   mainWindow.webContents.send("fromMain_Interval", forecast);
   console.log("running a task 1 minutes");
 });

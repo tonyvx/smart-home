@@ -29,12 +29,13 @@
     "electron": "^12.0.5"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "electron-context-menu": "^2.5.2",
+    "electron-oauth2": "^3.0.0",
     "electron-squirrel-startup": "^1.0.0",
-    "geoip-lite": "^1.4.2",
-    "iplocation": "^7.2.0",
     "node-cron": "^3.0.0",
     "openweather-apis": "^4.4.1",
+    "spotify-web-api-node": "^5.0.2",
     "v8-compile-cache": "^2.3.0"
   },
   "config": {

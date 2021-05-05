@@ -6,12 +6,12 @@ contextBridge.exposeInMainWorld("api", {
   send: (channel, data) => {
     // whitelist channels
     let validChannels = [
-      "toMain",
-      "toMain_Events",
-      "toMain_Attendee",
-      "toMain_NewAttendee",
-      "toMain_ConfirmAttendance",
-      "toMain_Upload",
+      "toMain_spotify_oauth",
+      // "toMain_Events",
+      // "toMain_Attendee",
+      // "toMain_NewAttendee",
+      // "toMain_ConfirmAttendance",
+      // "toMain_Upload",
     ];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);

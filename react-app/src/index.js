@@ -4,9 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import purple from "@material-ui/core/colors/purple";
-import green from "@material-ui/core/colors/green";
-import { dark } from "@material-ui/core/styles/createPalette";
+import { purple, green } from "@material-ui/core/colors";
 import { Paper } from "@material-ui/core";
 
 const theme = createMuiTheme({
@@ -17,6 +15,7 @@ const theme = createMuiTheme({
     secondary: {
       main: green[500],
     },
+    background: { paper: "#000000", default: "#000000" },
     type: "dark",
   },
 });
@@ -24,7 +23,7 @@ const theme = createMuiTheme({
 ReactDOM.render(
   // <React.StrictMode>
   <ThemeProvider theme={theme}>
-    <Paper>
+    <Paper style={{ height: "100%" }}>
       <App />
     </Paper>
   </ThemeProvider>,
