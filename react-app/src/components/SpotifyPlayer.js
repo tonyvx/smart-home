@@ -1,9 +1,4 @@
-import {
-  Button,
-  Container,
-
-  Grid
-} from "@material-ui/core";
+import { Button, Container, Grid } from "@material-ui/core";
 import React from "react";
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
@@ -13,17 +8,10 @@ import VolumeDownIcon from "@material-ui/icons/VolumeDown";
 import {
   AppContext,
   play,
-
-
-
-
-
-
-
-
   mute,
   decreaseVolume,
-  increaseVolume
+  increaseVolume,
+  skipToNext,
 } from "../AppContext";
 
 export const SpotifyPlayer = () => {
@@ -47,10 +35,7 @@ export const SpotifyPlayer = () => {
         </Grid>
 
         <Grid item xs={2}>
-          <Button
-            variant="outlined"
-            onClick={() => window.api.send("toMain_Spotify", "next")}
-          >
+          <Button variant="outlined" onClick={() => skipToNext(dispatch)}>
             <SkipNextIcon />
           </Button>
         </Grid>

@@ -60,7 +60,19 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
+          "config": {
+            "options": {
+              "name": "Smart Home",
+              "productName": "Smart Home",
+              "icon": "/home/avalantra/projects/smart-home/public/smart-home.png",
+              "categories": [
+                "Utility",
+                "Office"
+              ],
+              "maintainer": "tonyvx",
+              "homepage": "http://valantra.org"
+            }
+          }
         }
       ]
     }

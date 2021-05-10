@@ -93,6 +93,10 @@ export const play = (dispatch, playerStarted) => {
   dispatch({ type: "PLAY", playerStarted: !playerStarted });
 };
 
+export const skipToNext = (dispatch, playerStarted) => {
+  window.api.send("toMain_Spotify", "next");
+};
+
 export const setNews = (dispatch, news) => {
   console.log("setNews", news);
   dispatch({ type: "NEWS", news });
