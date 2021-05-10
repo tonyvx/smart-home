@@ -8,7 +8,6 @@ const express = require("express");
 var weather = require("openweather-apis");
 var cron = require("node-cron");
 
-var request = require("request");
 let location = {};
 
 const { getIPLocation } = require("./lib/getIPLocation");
@@ -23,6 +22,7 @@ const {
   next,
   setVolume,
   currentPlayingTrack,
+  getMyRecentlyPlayedTracks,
 } = require("./lib/spotify");
 
 contextMenu({});
@@ -78,19 +78,23 @@ function createWindow() {
     const forecast = await getForecast(location["zip_code"]);
     mainWindow.webContents.send("fromMain_Interval", forecast);
 
-    setTimeout(async () => {
-      const playlist =
-        spotifyToken.access_token &&
-        (await getFeaturedPlaylists(spotifyToken.access_token));
+    spotifyToken &&
+      setTimeout(async () => {
+        const playlist =
+          spotifyToken.access_token &&
+          (await getFeaturedPlaylists(spotifyToken.access_token));
 
-      const currentTrack =
-        spotifyToken.access_token &&
-        (await currentPlayingTrack(spotifyToken.access_token));
-      console.log(currentTrack);
-      playlist && mainWindow.webContents.send("fromMain_Spotify", playlist);
-      currentTrack &&
-        await mainWindow.webContents.send("fromMain_SpotifyTrack", currentTrack);
-    }, 1000);
+        const currentTrack =
+          spotifyToken.access_token &&
+          (await currentPlayingTrack(spotifyToken.access_token));
+        console.log(currentTrack);
+        playlist && mainWindow.webContents.send("fromMain_Spotify", playlist);
+        currentTrack &&
+          (await mainWindow.webContents.send(
+            "fromMain_SpotifyTrack",
+            currentTrack
+          ));
+      }, 1000);
   });
 
   mainWindow.on("closed", function () {
@@ -167,6 +171,22 @@ ipcMain.on("toMain_Spotify", (event, action) => {
     default:
       console.log("not implemented");
   }
+  setTimeout(async () => {
+    const currentTrack =
+      spotifyToken.access_token &&
+      (await currentPlayingTrack(spotifyToken.access_token));
+    console.log(currentTrack);
+
+    currentTrack &&
+      mainWindow.webContents.send("fromMain_SpotifyTrack", currentTrack);
+
+    const recent =
+      spotifyToken.access_token &&
+      (await getMyRecentlyPlayedTracks(spotifyToken.access_token));
+    console.log(recent);
+
+    recent && mainWindow.webContents.send("fromMain_Spotify", recent);
+  }, 1000);
 });
 
 ipcMain.on("toMain_SpotifyVolume", (event, volume) => {

@@ -42,7 +42,9 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "ignore": "^/react-app"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
