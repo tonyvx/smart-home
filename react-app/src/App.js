@@ -104,10 +104,10 @@ export function SmartHomeReactApp() {
           <CurrentWeather forecast={forecast} news={news} />
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="h3" align="center" padding="10">
+          <Typography variant="h1" align="center" padding="10">
             {currentTime}
           </Typography>
-          <Typography variant="subtitle1" align="center">
+          <Typography variant="h5" align="center">
             {currentTrack.track} - {currentTrack.artist}
           </Typography>
           <SpotifyPlayer />
@@ -119,17 +119,15 @@ export function SmartHomeReactApp() {
           {Array.isArray(news) && news.length > 0 && (
             <List
               className={classes.list}
-              width={900}
-              height={100}
+              width={1000}
+              height={400}
               headerHeight={20}
               rowHeight={30}
               rowCount={news.length}
               rowRenderer={({ index, isScrolling, key, style }) => {
                 return (
                   <Container key={key}>
-                    <Typography variant="subtitle1">
-                      {news[index].title}
-                    </Typography>
+                    <Typography variant="h5">{news[index].title}</Typography>
                     <Divider />
                   </Container>
                 );

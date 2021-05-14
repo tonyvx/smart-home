@@ -1,17 +1,31 @@
-import {
-  Avatar,
-  Container,
-
-  Grid,
-  Typography
-} from "@material-ui/core";
+import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import SunsetIcon from "@material-ui/icons/Brightness4";
 import SunriseIcon from "@material-ui/icons/Brightness5";
 import React from "react";
 
 export const CurrentWeather = ({ forecast, news }) => {
+  const theme = useTheme();
   const sunrise = forecast && forecast.sunrise ? forecast.sunrise : 0;
   const sunset = forecast && forecast.sunset ? forecast.sunset : 0;
+  const weatherIcon = forecast
+    ? "http://openweathermap.org/img/w/" + forecast.weather.icon + ".png"
+    : null;
+  const currentTemp =
+    forecast && forecast.weather && forecast.weather.temp > 0
+      ? Math.round(forecast.weather.temp)
+      : "";
+  const feelsLikeTemp = forecast
+    ? " " + Math.round(forecast.weather.feels_like)
+    : "";
+  const weatherDescription = forecast ? forecast.weather.description : "";
+  const minAndMaxTemp = forecast
+    ? "High " +
+      Math.round(forecast.weather.temp_max) +
+      "F " +
+      "Low " +
+      Math.round(forecast.weather.temp_min) +
+      "F "
+    : "";
   return forecast ? (
     <Container>
       <Grid container spacing={3}>
@@ -21,25 +35,21 @@ export const CurrentWeather = ({ forecast, news }) => {
               <Avatar
                 align="center"
                 id="wicon"
-                src={forecast
-                  ? "http://openweathermap.org/img/w/" +
-                  forecast.weather.icon +
-                  ".png"
-                  : null}
+                src={weatherIcon}
                 alt="Weather icon"
+                style={{
+                  width: theme.spacing(10),
+                  height: theme.spacing(10),
+                }}
               ></Avatar>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h3">
-                {forecast && forecast.weather && forecast.weather.temp > 0
-                  ? Math.round(forecast.weather.temp)
-                  : ""}
-              </Typography>
+              <Typography variant="h1">{currentTemp}</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="subtitle2" align="center">
-                Feels like{" "}
-                {forecast ? Math.round(forecast.weather.feels_like) : ""}
+              <Typography variant="h5" align="center">
+                Feels like
+                {feelsLikeTemp}
               </Typography>
             </Grid>
           </Grid>
@@ -48,41 +58,35 @@ export const CurrentWeather = ({ forecast, news }) => {
         <Grid item xs={9}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Typography variant="h6" align="center">
-                {forecast ? forecast.weather.description : ""}
+              <Typography variant="h3" align="center">
+                {weatherDescription}
               </Typography>
             </Grid>
-
-            <Grid item xs={6}>
-              <Typography variant="subtitle1" align="center">
-                {forecast
-                  ? "High " +
-                  Math.round(forecast.weather.temp_max) +
-                  "F " +
-                  "Low " +
-                  Math.round(forecast.weather.temp_min) +
-                  "F "
-                  : ""}
+            <Grid item xs={2}></Grid>
+            <Grid item xs={8}>
+              <Typography variant="h5" align="center">
+                {minAndMaxTemp}
               </Typography>
             </Grid>
-            <Grid item xs={6}></Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}></Grid>
+            <Grid item xs={2}></Grid>
+            <Grid item xs={4}>
               <Container>
-                <Typography variant="subtitle1">
+                <Typography variant="h5">
                   {sunrise && sunrise.substr(0, 5)}
                 </Typography>
                 <SunriseIcon />
               </Container>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Container>
-                <Typography variant="subtitle1">
+                <Typography variant="h5">
                   {sunset && sunset.substr(0, 5)}
                 </Typography>
                 <SunsetIcon />
               </Container>
             </Grid>
-            <Grid item xs={6}></Grid>
+            <Grid item xs={2}></Grid>
           </Grid>
         </Grid>
       </Grid>
