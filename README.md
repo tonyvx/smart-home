@@ -29,4 +29,5 @@ console.log(networkInterfaces);
 * news - https://newsapi.org/account
 * Music - spotify
 * ip - https://freegeoip.app/
+* rpi - turn off screen saver - https://dustinpfister.github.io/2020/09/10/linux-raspberry-pi-os-turrn-off-screen-blanking/
 * oauth in electron - https://medium.com/linagora-engineering/using-oauth-in-an-electron-application-abb0376c2ae0
