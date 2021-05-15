@@ -113,7 +113,9 @@ export function SmartHomeReactApp() {
           <SpotifyPlayer />
         </Grid>
         <Grid item xs={12}>
-          <Typography align="center">News</Typography>
+          <Typography align="center" variant="h4">
+            News
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           {Array.isArray(news) && news.length > 0 && (

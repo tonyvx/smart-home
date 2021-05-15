@@ -61,13 +61,16 @@ function createWindow() {
       location,
       news,
     });
-
-    const forecast = await getForecast(location["zip_code"]);
+    const forecast = await getForecast(
+      location["zip_code"],
+      location["lat"],
+      location["lon"]
+    );
     mainWindow.webContents.send("fromMain_Interval", forecast);
 
     setTimeout(async () => {
       const currentTrack = await currentPlayingTrack();
-     
+
       currentTrack &&
         (await mainWindow.webContents.send(
           "fromMain_SpotifyTrack",

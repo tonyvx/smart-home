@@ -1,4 +1,10 @@
-import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
+import {
+  Avatar,
+  Container,
+  Grid,
+  Typography,
+  useTheme,
+} from "@material-ui/core";
 import SunsetIcon from "@material-ui/icons/Brightness4";
 import SunriseIcon from "@material-ui/icons/Brightness5";
 import React from "react";
@@ -18,14 +24,14 @@ export const CurrentWeather = ({ forecast, news }) => {
     ? " " + Math.round(forecast.weather.feels_like)
     : "";
   const weatherDescription = forecast ? forecast.weather.description : "";
-  const minAndMaxTemp = forecast
-    ? "High " +
-      Math.round(forecast.weather.temp_max) +
-      "F " +
-      "Low " +
-      Math.round(forecast.weather.temp_min) +
-      "F "
-    : "";
+  // const minAndMaxTemp = forecast
+  //   ? "High " +
+  //     Math.round(forecast.weather.temp_max) +
+  //     "&deg;F " +
+  //     "Low " +
+  //     Math.round(forecast.weather.temp_min) +
+  //     "&deg;F "
+  //   : "";
   return forecast ? (
     <Container>
       <Grid container spacing={3}>
@@ -44,12 +50,12 @@ export const CurrentWeather = ({ forecast, news }) => {
               ></Avatar>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h1">{currentTemp}</Typography>
+              <Typography variant="h1">{currentTemp}&deg;</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h5" align="center">
                 Feels like
-                {feelsLikeTemp}
+                {feelsLikeTemp}&deg;
               </Typography>
             </Grid>
           </Grid>
@@ -64,9 +70,15 @@ export const CurrentWeather = ({ forecast, news }) => {
             </Grid>
             <Grid item xs={2}></Grid>
             <Grid item xs={8}>
-              <Typography variant="h5" align="center">
-                {minAndMaxTemp}
-              </Typography>
+              {forecast &&
+                forecast.weather &&
+                forecast.weather.temp_max &&
+                forecast.weather.temp_min && (
+                  <Typography variant="h5" align="center">
+                    High {Math.round(forecast.weather.temp_max)}&deg;F Low{" "}
+                    {Math.round(forecast.weather.temp_min)}&deg;F
+                  </Typography>
+                )}
             </Grid>
             <Grid item xs={2}></Grid>
             <Grid item xs={2}></Grid>

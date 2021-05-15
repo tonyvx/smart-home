@@ -79,7 +79,7 @@ const setVolume = (dispatch, volume) => {
     type: "VOLUME",
     volume,
   });
-  window.api.send("toMain_SpotifyVolume", volume - 10);
+  window.api.send("toMain_SpotifyVolume", volume);
 };
 
 export const setForecast = (dispatch, forecast) => {
