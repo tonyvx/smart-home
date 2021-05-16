@@ -5,6 +5,7 @@ import {
   Typography,
   useTheme,
 } from "@material-ui/core";
+import { grey, yellow } from "@material-ui/core/colors";
 import SunsetIcon from "@material-ui/icons/Brightness4";
 import SunriseIcon from "@material-ui/icons/Brightness5";
 import React from "react";
@@ -87,7 +88,7 @@ export const CurrentWeather = ({ forecast, news }) => {
                 <Typography variant="h5">
                   {sunrise && sunrise.substr(0, 5)}
                 </Typography>
-                <SunriseIcon />
+                <SunriseIcon style={{ color: yellow[400] }}/>
               </Container>
             </Grid>
             <Grid item xs={4}>
@@ -95,7 +96,7 @@ export const CurrentWeather = ({ forecast, news }) => {
                 <Typography variant="h5">
                   {sunset && sunset.substr(0, 5)}
                 </Typography>
-                <SunsetIcon />
+                <SunsetIcon style={{ color: grey[400] }}/>
               </Container>
             </Grid>
             <Grid item xs={2}></Grid>

@@ -23,6 +23,7 @@ const {
   authorizationCode,
   accessTokenFromAuthCode,
   refreshToken,
+  getMyCurrentPlaybackState,
 } = require("./lib/spotify");
 
 contextMenu({});
@@ -78,7 +79,11 @@ function createWindow() {
         ));
       const recent = await getMyRecentlyPlayedTracks();
 
+      const playbackState = await getMyCurrentPlaybackState();
+
       recent && mainWindow.webContents.send("fromMain_Spotify", recent);
+      playbackState &&
+        mainWindow.webContents.send("fromMain_playback", playbackState);
     }, 1000);
   });
 
@@ -152,6 +157,9 @@ ipcMain.on("toMain_SpotifyVolume", (event, volume) => {
   setVolume(volume);
 });
 
+const publish = (channel, message) => {
+  mainWindow.webContents.send(channel, message);
+};
 const sendMessage = (message) => {
   console.log("sendMessage", message);
   new Notification({
@@ -162,7 +170,11 @@ const sendMessage = (message) => {
 
 cron.schedule("*/30 * * * *", async () => {
   weather.setZipCode(location["zip_code"]);
-  const forecast = await getForecast(location["zip_code"]);
+  const forecast = await getForecast(
+    location["zip_code"],
+    location["lat"],
+    location["lon"]
+  );
   mainWindow.webContents.send("fromMain_Interval", forecast);
   console.log("running a task 30 minutes");
 });

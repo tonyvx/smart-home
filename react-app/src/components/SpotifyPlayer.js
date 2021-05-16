@@ -1,4 +1,4 @@
-import { Button, Container, Grid } from "@material-ui/core";
+import { Button, Container, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
@@ -59,6 +59,15 @@ export const SpotifyPlayer = () => {
           >
             <VolumeDownIcon />
           </Button>
+        </Grid>
+        <Grid item xs={12}>
+          {context.playBackState.device && (
+            <Typography variant="overline" >
+              {context.playBackState.device.type}
+              {" : "}
+              {context.playBackState.device.name}
+            </Typography>
+          )}
         </Grid>
       </Grid>
     </Container>

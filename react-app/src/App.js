@@ -14,6 +14,7 @@ import {
   setLocation,
   setNews,
   setRecentlyPlayed,
+  setPlayBackState,
 } from "./AppContext";
 import { CurrentWeather } from "./components/CurrentWeather";
 import { SpotifyPlayer } from "./components/SpotifyPlayer";
@@ -94,6 +95,12 @@ export function SmartHomeReactApp() {
   useEffect(() => {
     window.api.receive("fromMain_SpotifyTrack", (resp) => {
       setCurrentTrack(dispatch, resp);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.api.receive("fromMain_playback", (resp) => {
+      setPlayBackState(dispatch, resp);
     });
   }, []);
 

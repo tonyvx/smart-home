@@ -11,6 +11,7 @@ export const initialState = {
   news: [],
   location: {},
   footerInfo: {},
+  playBackState: {},
 };
 
 export const reducer = (context, action) => {
@@ -57,6 +58,8 @@ export const reducer = (context, action) => {
         ...context,
         location: action.location,
       };
+    case "PLAYBACK_STATE":
+      return { ...context, playBackState: action.playBackState };
     default:
       return context;
   }
@@ -115,6 +118,11 @@ export const setLocation = (dispatch, location) => {
 export const setCurrentTrack = (dispatch, currentTrack) => {
   console.log("setCurrentTrack", currentTrack);
   dispatch({ type: "CURRENT_TRACK", currentTrack });
+};
+
+export const setPlayBackState = (dispatch, playBackState) => {
+  console.log("setPlayBackState", playBackState);
+  dispatch({ type: "PLAYBACK_STATE", playBackState });
 };
 
 export const setRecentlyPlayed = (dispatch, recentlyPlayed) => {
