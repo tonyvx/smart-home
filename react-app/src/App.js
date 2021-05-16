@@ -24,6 +24,7 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     height: "100vh",
+    maxWidth: 1700,
   },
   paper: {
     padding: theme.spacing(2),
@@ -128,7 +129,7 @@ export function SmartHomeReactApp() {
           {Array.isArray(news) && news.length > 0 && (
             <List
               className={classes.list}
-              width={1000}
+              width={1600}
               height={400}
               headerHeight={20}
               rowHeight={30}
