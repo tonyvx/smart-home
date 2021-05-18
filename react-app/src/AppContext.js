@@ -90,9 +90,18 @@ export const setForecast = (dispatch, forecast) => {
   dispatch({ type: "FORECAST", forecast });
 };
 
-export const play = (dispatch, playerStarted) => {
-  console.log("play", playerStarted);
-  window.api.send("toMain_Spotify", !playerStarted ? "play" : "pause");
+// export const play = (dispatch, playerStarted) => {
+//   console.log("play", playerStarted);
+//   window.api.send("toMain_Spotify", !playerStarted ? "play" : "pause");
+//   dispatch({ type: "PLAY", playerStarted: !playerStarted });
+// };
+
+export const play = (dispatch, playerStarted, uri) => {
+  console.log("play", playerStarted, uri);
+  window.api.send("toMain_Spotify", {
+    action: !playerStarted ? "play" : "pause",
+    uri,
+  });
   dispatch({ type: "PLAY", playerStarted: !playerStarted });
 };
 

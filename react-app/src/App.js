@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { List } from "react-virtualized";
 import "react-virtualized/styles.css";
-import { getFormattedTime } from "../../lib/getFormattedTime";
 import {
   AppContext,
   initialState,
@@ -16,6 +15,7 @@ import {
   setRecentlyPlayed,
   setPlayBackState,
 } from "./AppContext";
+import { Clock } from "./components/Clock";
 import { CurrentWeather } from "./components/CurrentWeather";
 import { SpotifyPlayer } from "./components/SpotifyPlayer";
 import { SpotifyRecentlyPlayed } from "./components/SpotifyRecentlyPlayed";
@@ -60,7 +60,6 @@ export default function App() {
 
 export function SmartHomeReactApp() {
   const classes = useStyles();
-  const [currentTime, setCurrentTime] = useState("00:00:00");
 
   const { context, dispatch } = React.useContext(AppContext);
 
@@ -79,13 +78,6 @@ export function SmartHomeReactApp() {
     window.api.receive("fromMain_Spotify", (resp) => {
       setRecentlyPlayed(dispatch, resp);
     });
-  }, []);
-
-  useEffect(() => {
-    var timerID = setInterval(() => setCurrentTime(getFormattedTime()), 1000);
-    return function cleanup() {
-      clearInterval(timerID);
-    };
   }, []);
 
   useEffect(() => {
@@ -112,9 +104,7 @@ export function SmartHomeReactApp() {
           <CurrentWeather forecast={forecast} news={news} />
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="h1" align="center" padding="10">
-            {currentTime}
-          </Typography>
+          <Clock />
           <Typography variant="h5" align="center">
             {currentTrack.track} - {currentTrack.artist}
           </Typography>
@@ -137,12 +127,14 @@ export function SmartHomeReactApp() {
               rowRenderer={({ index, isScrolling, key, style }) => {
                 return (
                   <Container key={key}>
-                    <Typography variant="h5">{news[index].title}</Typography>
+                    <Typography variant="h5" style={{ margin: 4 }}>
+                      {news[index].title}
+                    </Typography>
                     <Divider />
                   </Container>
                 );
               }}
-              overscanRowCount={10}
+              overscanRowCount={1}
             ></List>
           )}
         </Grid>

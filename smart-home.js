@@ -19,7 +19,7 @@ const {
   next,
   setVolume,
   currentPlayingTrack,
-  getMyRecentlyPlayedTracks,
+  getFeaturedPlaylists,
   authorizationCode,
   accessTokenFromAuthCode,
   refreshToken,
@@ -77,7 +77,7 @@ function createWindow() {
           "fromMain_SpotifyTrack",
           currentTrack
         ));
-      const recent = await getMyRecentlyPlayedTracks();
+      const recent = await getFeaturedPlaylists();
 
       const playbackState = await getMyCurrentPlaybackState();
 
@@ -123,10 +123,14 @@ ipcMain.on("toMain", (event, message) => {
 });
 
 ipcMain.on("toMain_Spotify", (event, action) => {
-  console.log("channel: toMain_Play :", action);
-  switch (action) {
+  console.log(
+    "channel: toMain_Play :",
+    action.uri ? "play" : action,
+    action.uri
+  );
+  switch (action.action ? action.action : action) {
     case "play":
-      play();
+      play(action.uri);
       break;
     case "pause":
       pause();
@@ -145,7 +149,7 @@ ipcMain.on("toMain_Spotify", (event, action) => {
     currentTrack &&
       mainWindow.webContents.send("fromMain_SpotifyTrack", currentTrack);
 
-    const recent = await getMyRecentlyPlayedTracks();
+    const recent = await getFeaturedPlaylists();
     console.log(recent.length);
 
     recent && mainWindow.webContents.send("fromMain_Spotify", recent);

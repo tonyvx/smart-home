@@ -1,42 +1,38 @@
-import {
-  Avatar,
-
-  Container,
-
-  Grid,
-  Typography
-} from "@material-ui/core";
-import React from "react";
-import { AppContext } from "../AppContext";
+import { Avatar, Grid, Typography } from "@material-ui/core";
+import React, { useState } from "react";
 import { useStyles } from "../App";
+import { AppContext, play } from "../AppContext";
 
 export const SpotifyRecentlyPlayed = () => {
   const classes = useStyles();
-  const { context } = React.useContext(AppContext);
+  const { dispatch, context } = React.useContext(AppContext);
 
   const { recentlyPlayed } = context;
+  const [pos, setPos] = useState(0);
 
   return (
     <Grid container spacing={3}>
       {recentlyPlayed &&
         Array.isArray(recentlyPlayed) &&
-        recentlyPlayed.map((p, i) => (
-          <Grid key={i} item xs={3}>
-            <Container
+        recentlyPlayed
+          .filter((a, i) => i > pos && i <= pos + 4)
+          .map((p) => (
+            <Grid
+              item
+              xs={3}
+              key={p.name}
               align="center"
-              onClick={() => window.api.send("toMain_OpenPlayer", p.url)}
+              onClick={() => play(dispatch, false, p.uri)}
             >
               <Avatar
                 variant={"rounded"}
-                src={p.image.url}
-                className={classes.avatar} />
-              <Typography variant="subtitle2">
-                {p.name} - from {p.album} - by {p.artist}
-              </Typography>
-            </Container>
-          </Grid>
-        ))}
-      <Grid item xs={12}></Grid>
+                src={p.image}
+                className={classes.avatar}
+              />
+              <Typography variant="subtitle1">{p.name}</Typography>
+              <Typography variant="subtitle2">{p.description}</Typography>
+            </Grid>
+          ))}
     </Grid>
   );
 };
