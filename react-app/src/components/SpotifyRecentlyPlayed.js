@@ -1,38 +1,43 @@
-import { Avatar, Grid, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import {
+  Avatar,
+  Typography,
+  List,
+  ListItem,
+  Container,
+} from "@material-ui/core";
+import React from "react";
 import { useStyles } from "../App";
 import { AppContext, play } from "../AppContext";
+import "react-virtualized/styles.css";
 
 export const SpotifyRecentlyPlayed = () => {
   const classes = useStyles();
   const { dispatch, context } = React.useContext(AppContext);
 
   const { recentlyPlayed } = context;
-  const [pos, setPos] = useState(0);
 
   return (
-    <Grid container spacing={3}>
-      {recentlyPlayed &&
-        Array.isArray(recentlyPlayed) &&
-        recentlyPlayed
-          .filter((a, i) => i > pos && i <= pos + 4)
-          .map((p) => (
-            <Grid
-              item
-              xs={3}
-              key={p.name}
-              align="center"
-              onClick={() => play(dispatch, false, p.uri)}
-            >
+    <List className={classes.listHorizontalDisplay}>
+      {Array.isArray(recentlyPlayed) &&
+        recentlyPlayed.map((item) => (
+          <ListItem
+            key={item.name}
+            align="center"
+            onClick={() => play(dispatch, false, item.uri)}
+          >
+            <Container>
               <Avatar
                 variant={"rounded"}
-                src={p.image}
+                src={item.image}
                 className={classes.avatar}
               />
-              <Typography variant="subtitle1">{p.name}</Typography>
-              <Typography variant="subtitle2">{p.description}</Typography>
-            </Grid>
-          ))}
-    </Grid>
+              <Typography variant="subtitle1">{item.name}</Typography>
+              <Typography variant="subtitle2">
+                {item.description.substring(0, 40)}
+              </Typography>
+            </Container>
+          </ListItem>
+        ))}
+    </List>
   );
 };

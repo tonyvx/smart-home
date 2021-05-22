@@ -1,6 +1,6 @@
 import { Container, Divider, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { List } from "react-virtualized";
 import "react-virtualized/styles.css";
 import {
@@ -41,6 +41,12 @@ export const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(8),
     height: theme.spacing(8),
+  },
+  listHorizontalDisplay: {
+    display: "inline-flex",
+    width: 1400,
+    overflowY: "auto",
+    height: 300,
   },
 }));
 
