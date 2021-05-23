@@ -13,6 +13,7 @@ let location = {};
 const { getIPLocation } = require("./lib/getIPLocation");
 const { getNews } = require("./lib/getNews");
 const { getForecast } = require("./lib/getForecast");
+const { getFormattedTime } = require("./lib/getFormattedTime");
 const {
   play,
   pause,
@@ -99,7 +100,9 @@ function createWindow() {
   });
 
   expressApp.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(
+      getFormattedTime() + ` :  listening at http://localhost:${port}`
+    );
   });
 }
 
@@ -118,18 +121,22 @@ app.on("activate", function () {
 });
 
 ipcMain.on("toMain", (event, message) => {
-  console.log("channel: toMain (sendMessage) :", message);
+  console.log(
+    getFormattedTime() + " : channel: toMain (sendMessage) :",
+    message
+  );
   sendMessage(message);
 });
 
 ipcMain.on("toMain_Spotify", (event, action) => {
   console.log(
-    "channel: toMain_Play :",
+    getFormattedTime() + " : channel: toMain_Play :",
     action.uri ? "play" : action,
     action.uri
   );
   switch (action.action ? action.action : action) {
     case "play":
+      pause();
       play(action.uri);
       break;
     case "pause":
@@ -140,24 +147,27 @@ ipcMain.on("toMain_Spotify", (event, action) => {
       break;
 
     default:
-      console.log("not implemented");
+      console.log(getFormattedTime() + " : not implemented");
   }
   setTimeout(async () => {
     const currentTrack = await currentPlayingTrack();
-    console.log(currentTrack.name);
+    console.log(getFormattedTime() + " : " + currentTrack.name);
 
     currentTrack &&
       mainWindow.webContents.send("fromMain_SpotifyTrack", currentTrack);
 
     const recent = await getFeaturedPlaylists();
-    console.log(recent.length);
+    console.log(getFormattedTime() + " : " + recent.length);
 
     recent && mainWindow.webContents.send("fromMain_Spotify", recent);
   }, 1000);
 });
 
 ipcMain.on("toMain_SpotifyVolume", (event, volume) => {
-  console.log("channel: toMain_SpotifyVolume :", volume);
+  console.log(
+    getFormattedTime() + " : channel: toMain_SpotifyVolume :",
+    volume
+  );
   setVolume(volume);
 });
 
@@ -165,25 +175,24 @@ const publish = (channel, message) => {
   mainWindow.webContents.send(channel, message);
 };
 const sendMessage = (message) => {
-  console.log("sendMessage", message);
+  console.log(getFormattedTime() + " : sendMessage", message);
   new Notification({
     title: "Smart Home",
     body: message,
   }).show();
 };
 
-cron.schedule("*/30 * * * *", async () => {
-  weather.setZipCode(location["zip_code"]);
+cron.schedule("*/10 * * * *", async () => {
   const forecast = await getForecast(
     location["zip_code"],
     location["lat"],
     location["lon"]
   );
   mainWindow.webContents.send("fromMain_Interval", forecast);
-  console.log("running a task 30 minutes");
+  console.log(getFormattedTime() + " : running a task 10 minutes");
 });
 
 cron.schedule("*/59 * * * *", async () => {
   await refreshToken();
-  console.log("refreshing token");
+  console.log(getFormattedTime() + " : refreshing token");
 });
