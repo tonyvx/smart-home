@@ -128,6 +128,16 @@ ipcMain.on("toMain", (event, message) => {
   sendMessage(message);
 });
 
+ipcMain.on("toMain_Playback", async (event, message) => {
+  console.log(
+    getFormattedTime() + " : channel: toMain_Playback (sendMessage) :",
+    message
+  );
+  const playbackState1 = await getMyCurrentPlaybackState();
+  if (playbackState1)
+    mainWindow.webContents.send("fromMain_playback", playbackState1);
+});
+
 ipcMain.on("toMain_Spotify", async (event, action) => {
   console.log(
     getFormattedTime() + " : channel: toMain_Play :",
@@ -136,35 +146,18 @@ ipcMain.on("toMain_Spotify", async (event, action) => {
   );
   switch (action.action ? action.action : action) {
     case "play":
-      const playbackState = await play(action.uri);
-      if (playbackState) {
-        mainWindow.webContents.send("fromMain_playback", playbackState);
-        
-        setTimeout(
-          async () =>
-            mainWindow.webContents.send(
-              "fromMain_playback",
-              await getMyCurrentPlaybackState()
-            ),
-          playbackState.item.duration_ms - playbackState.progress_ms + 100
-        );
-      }
+      const playbackState1 = await play(action.uri);
+      playbackState1 &&
+        mainWindow.webContents.send("fromMain_playback", playbackState1);
       break;
     case "pause":
       pause();
       break;
     case "next":
-      const playbackState1 = await next();
-      playbackState1 &&
-        mainWindow.webContents.send("fromMain_playback", playbackState1);
-      setTimeout(
-        async () =>
-          mainWindow.webContents.send(
-            "fromMain_playback",
-            await getMyCurrentPlaybackState()
-          ),
-        playbackState1.item.duration_ms - playbackState1.progress_ms + 100
-      );
+      const playbackState = await next();
+      playbackState &&
+        mainWindow.webContents.send("fromMain_playback", playbackState);
+
       break;
 
     default:
@@ -214,6 +207,6 @@ cron.schedule("*/10 * * * *", async () => {
 });
 
 cron.schedule("*/59 * * * *", async () => {
-  await refreshToken();
   console.log(getFormattedTime() + " : refreshing token");
+  await refreshToken();
 });

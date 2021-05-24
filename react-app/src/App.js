@@ -69,7 +69,8 @@ export function SmartHomeReactApp() {
 
   const { context, dispatch } = React.useContext(AppContext);
 
-  const { footerInfo, location, news, forecast, currentTrack } = context;
+  const { footerInfo, location, news, forecast, currentTrack, playBackState } =
+    context;
 
   useEffect(() => {
     window.api.receive("fromMain_FinishLoad", (resp) => {
@@ -111,9 +112,7 @@ export function SmartHomeReactApp() {
         </Grid>
         <Grid item xs={6}>
           <Clock />
-          <Typography variant="h5" align="center">
-            {currentTrack.track} - {currentTrack.artist}
-          </Typography>
+          
           <SpotifyPlayer />
         </Grid>
         <Grid item xs={12}>

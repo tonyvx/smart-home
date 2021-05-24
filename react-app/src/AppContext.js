@@ -59,7 +59,15 @@ export const reducer = (context, action) => {
         location: action.location,
       };
     case "PLAYBACK_STATE":
-      return { ...context, playBackState: action.playBackState };
+      return {
+        ...context,
+        playBackState: action.playBackState,
+        currentTrack: {
+          album: action.playBackState.item.album.name,
+          artist: action.playBackState.item.artists[0].name,
+          track: action.playBackState.item.name,
+        },
+      };
     default:
       return context;
   }
