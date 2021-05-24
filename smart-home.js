@@ -128,7 +128,7 @@ ipcMain.on("toMain", (event, message) => {
   sendMessage(message);
 });
 
-ipcMain.on("toMain_Spotify", (event, action) => {
+ipcMain.on("toMain_Spotify", async (event, action) => {
   console.log(
     getFormattedTime() + " : channel: toMain_Play :",
     action.uri ? "play" : action,
@@ -136,14 +136,35 @@ ipcMain.on("toMain_Spotify", (event, action) => {
   );
   switch (action.action ? action.action : action) {
     case "play":
-      pause();
-      play(action.uri);
+      const playbackState = await play(action.uri);
+      if (playbackState) {
+        mainWindow.webContents.send("fromMain_playback", playbackState);
+        
+        setTimeout(
+          async () =>
+            mainWindow.webContents.send(
+              "fromMain_playback",
+              await getMyCurrentPlaybackState()
+            ),
+          playbackState.item.duration_ms - playbackState.progress_ms + 100
+        );
+      }
       break;
     case "pause":
       pause();
       break;
     case "next":
-      next();
+      const playbackState1 = await next();
+      playbackState1 &&
+        mainWindow.webContents.send("fromMain_playback", playbackState1);
+      setTimeout(
+        async () =>
+          mainWindow.webContents.send(
+            "fromMain_playback",
+            await getMyCurrentPlaybackState()
+          ),
+        playbackState1.item.duration_ms - playbackState1.progress_ms + 100
+      );
       break;
 
     default:
