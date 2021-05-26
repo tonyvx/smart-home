@@ -94,17 +94,7 @@ export const SpotifyPlayer = () => {
             </Typography>
           )}
         </Grid>
-        <Grid item xs={12}>
-          {playBackState.item && (
-            <Typography variant="overline" align="center">
-              {Math.ceil(playBackState.progress_ms / 60000)}:
-              {playBackState.progress_ms % 60000} -{" "}
-              {Math.ceil(playBackState.item.duration_ms / 60000)}:
-              {playBackState.item.duration_ms % 60000}
-            </Typography>
-          )}
-        </Grid>
-      </Grid>
+       </Grid>
     </Container>
   );
 };

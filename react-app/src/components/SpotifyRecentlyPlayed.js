@@ -22,7 +22,7 @@ export const SpotifyRecentlyPlayed = () => {
     <List className={classes.listHorizontalDisplay}>
       {Array.isArray(recentlyPlayed) &&
         recentlyPlayed.map((item) => (
-          <ListItem key={item.name} align="center">
+          <ListItem key={item.name} align="center" style={{ height: "50%" }}>
             <Container
               onClick={(event) =>
                 play(dispatch, false, item.uri) &&
