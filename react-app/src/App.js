@@ -104,6 +104,12 @@ export function SmartHomeReactApp() {
     });
   }, []);
 
+  useEffect(() => {
+    window.api.receive("fromMain_Interval_News", (resp) => {
+      setNews(dispatch, resp);
+    });
+  }, []);
+  
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>

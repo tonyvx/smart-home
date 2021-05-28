@@ -210,3 +210,9 @@ cron.schedule("*/59 * * * *", async () => {
   console.log(getFormattedTime() + " : refreshing token");
   await refreshToken();
 });
+
+cron.schedule("* 6,9,12,15,18,21 * * *", async () => {
+  console.log(getFormattedTime() + " : updating news");
+  const news = await getNews();
+  mainWindow.webContents.send("fromMain_Interval_News", news);
+});
