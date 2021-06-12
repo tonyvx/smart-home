@@ -118,7 +118,6 @@ export function SmartHomeReactApp() {
         </Grid>
         <Grid item xs={6}>
           <Clock />
-          
           <SpotifyPlayer />
         </Grid>
         <Grid item xs={12}>
@@ -131,7 +130,7 @@ export function SmartHomeReactApp() {
             <List
               className={classes.list}
               width={1600}
-              height={400}
+              height={300}
               headerHeight={20}
               rowHeight={30}
               rowCount={news.length}

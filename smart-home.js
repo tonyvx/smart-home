@@ -25,6 +25,7 @@ const {
   accessTokenFromAuthCode,
   refreshToken,
   getMyCurrentPlaybackState,
+  previous,
 } = require("./lib/spotify");
 
 contextMenu({});
@@ -157,7 +158,12 @@ ipcMain.on("toMain_Spotify", async (event, action) => {
       const playbackState = await next();
       playbackState &&
         mainWindow.webContents.send("fromMain_playback", playbackState);
+      break;
 
+    case "previous":
+      const playbackState2 = await previous();
+      playbackState2 &&
+        mainWindow.webContents.send("fromMain_playback", playbackState2);
       break;
 
     default:

@@ -125,6 +125,10 @@ export const skipToNext = (dispatch, playerStarted) => {
   window.api.send("toMain_Spotify", "next");
 };
 
+export const skipToPrevious = (dispatch, playerStarted) => {
+  window.api.send("toMain_Spotify", "previous");
+};
+
 export const setNews = (dispatch, news) => {
   console.log("setNews", news);
   dispatch({ type: "NEWS", news });

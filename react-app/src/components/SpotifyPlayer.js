@@ -3,6 +3,7 @@ import React from "react";
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
+import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import VolumeMuteIcon from "@material-ui/icons/VolumeMute";
 import VolumeDownIcon from "@material-ui/icons/VolumeDown";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
@@ -14,6 +15,7 @@ import {
   decreaseVolume,
   increaseVolume,
   skipToNext,
+  skipToPrevious,
 } from "../AppContext";
 
 export const SpotifyPlayer = () => {
@@ -34,7 +36,6 @@ export const SpotifyPlayer = () => {
           </Typography>
         </Grid>
 
-        <Grid item xs={1}></Grid>
         <Grid item xs={2}>
           <Button
             variant="outlined"
@@ -47,7 +48,11 @@ export const SpotifyPlayer = () => {
             )}
           </Button>
         </Grid>
-
+        <Grid item xs={2}>
+          <Button variant="outlined" onClick={() => skipToPrevious(dispatch)}>
+            <SkipPreviousIcon />
+          </Button>
+        </Grid>
         <Grid item xs={2}>
           <Button variant="outlined" onClick={() => skipToNext(dispatch)}>
             <SkipNextIcon />
@@ -84,7 +89,6 @@ export const SpotifyPlayer = () => {
             <VolumeUpIcon />
           </Button>
         </Grid>
-        <Grid item xs={1}></Grid>
         <Grid item xs={12}>
           {context.playBackState.device && (
             <Typography variant="overline">
