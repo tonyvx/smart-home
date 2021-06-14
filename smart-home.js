@@ -96,7 +96,7 @@ function createWindow() {
   expressApp.get("/callback", async (req, res) => {
     await accessTokenFromAuthCode(req.query.code);
     BrowserWindow.getAllWindows().forEach(
-      (win) => "spotifyToken" === win.title && win.close()
+      (win) => "spotifyToken" === win.getTitle() && win.close()
     );
   });
 
