@@ -54,7 +54,7 @@ export const CurrentWeather = ({ forecast, news }) => {
               <Typography variant="h1">{currentTemp}&deg;</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h5" align="center">
+              <Typography variant="h4" align="center">
                 Feels like
                 {feelsLikeTemp}&deg;
               </Typography>
@@ -75,7 +75,7 @@ export const CurrentWeather = ({ forecast, news }) => {
                 forecast.weather &&
                 forecast.weather.temp_max &&
                 forecast.weather.temp_min && (
-                  <Typography variant="h5" align="center">
+                  <Typography variant="h4" align="center">
                     High {Math.round(forecast.weather.temp_max)}&deg;F Low{" "}
                     {Math.round(forecast.weather.temp_min)}&deg;F
                   </Typography>
@@ -85,7 +85,7 @@ export const CurrentWeather = ({ forecast, news }) => {
             <Grid item xs={2}></Grid>
             <Grid item xs={4}>
               <Container>
-                <Typography variant="h5">
+                <Typography variant="h4">
                   {sunrise && sunrise.substr(0, 5)}
                 </Typography>
                 <SunriseIcon style={{ color: yellow[400] }}/>
@@ -93,7 +93,7 @@ export const CurrentWeather = ({ forecast, news }) => {
             </Grid>
             <Grid item xs={4}>
               <Container>
-                <Typography variant="h5">
+                <Typography variant="h4">
                   {sunset && sunset.substr(0, 5)}
                 </Typography>
                 <SunsetIcon style={{ color: grey[400] }}/>
