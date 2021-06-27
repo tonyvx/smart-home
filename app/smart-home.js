@@ -10,10 +10,10 @@ var cron = require("node-cron");
 
 let location = {};
 
-const { getIPLocation } = require("./lib/getIPLocation");
-const { getNews } = require("./lib/getNews");
-const { getForecast } = require("./lib/getForecast");
-const { getFormattedTime } = require("./lib/getFormattedTime");
+const { getIPLocation } = require("../lib/getIPLocation");
+const { getNews } = require("../lib/getNews");
+const { getForecast } = require("../lib/getForecast");
+const { getFormattedTime } = require("../lib/getFormattedTime");
 const {
   play,
   pause,
@@ -26,7 +26,7 @@ const {
   refreshToken,
   getMyCurrentPlaybackState,
   previous,
-} = require("./lib/spotify");
+} = require("../lib/spotify");
 
 contextMenu({});
 

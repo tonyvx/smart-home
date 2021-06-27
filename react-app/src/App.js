@@ -1,8 +1,6 @@
 import { Container, Divider, Grid, List, ListItem, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
-// import { List } from "react-virtualized";
-import "react-virtualized/styles.css";
 import {
   AppContext,
   initialState,
