@@ -8,6 +8,8 @@ import {
 import { grey, yellow } from "@material-ui/core/colors";
 import SunsetIcon from "@material-ui/icons/Brightness4";
 import SunriseIcon from "@material-ui/icons/Brightness5";
+import DownArrow from '@material-ui/icons/ArrowDownwardRounded';
+import UpArrow from '@material-ui/icons/ArrowUpwardRounded';
 import React from "react";
 
 export const CurrentWeather = ({ forecast, news }) => {
@@ -25,84 +27,97 @@ export const CurrentWeather = ({ forecast, news }) => {
     ? " " + Math.round(forecast.weather.feels_like)
     : "";
   const weatherDescription = forecast ? forecast.weather.description : "";
-  // const minAndMaxTemp = forecast
-  //   ? "High " +
-  //     Math.round(forecast.weather.temp_max) +
-  //     "&deg;F " +
-  //     "Low " +
-  //     Math.round(forecast.weather.temp_min) +
-  //     "&deg;F "
-  //   : "";
   return forecast ? (
     <Container>
       <Grid container spacing={3}>
+        <Grid item xs={4} />
+        <Grid item xs={1}>
+          <Avatar
+            align="center"
+            id="wicon"
+            src={weatherIcon}
+            alt="Weather icon"
+            style={{
+              width: theme.spacing(10),
+              height: theme.spacing(10),
+            }}
+          ></Avatar>
+        </Grid>
         <Grid item xs={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Avatar
-                align="center"
-                id="wicon"
-                src={weatherIcon}
-                alt="Weather icon"
-                style={{
-                  width: theme.spacing(10),
-                  height: theme.spacing(10),
-                }}
-              ></Avatar>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h1">{currentTemp}&deg;</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h4" align="center">
-                Feels like
-                {feelsLikeTemp}&deg;
-              </Typography>
-            </Grid>
-          </Grid>
+          <Typography variant="h5" align="center" style={{ margin: 12 }}>
+            {weatherDescription}
+          </Typography>
         </Grid>
+        <Grid item xs={4} />
 
-        <Grid item xs={9}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant="h3" align="center">
-                {weatherDescription}
-              </Typography>
-            </Grid>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={8}>
-              {forecast &&
-                forecast.weather &&
-                forecast.weather.temp_max &&
-                forecast.weather.temp_min && (
-                  <Typography variant="h4" align="center">
-                    High {Math.round(forecast.weather.temp_max)}&deg;F Low{" "}
-                    {Math.round(forecast.weather.temp_min)}&deg;F
-                  </Typography>
-                )}
-            </Grid>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={4}>
-              <Container>
-                <Typography variant="h4">
-                  {sunrise && sunrise.substr(0, 5)}
-                </Typography>
-                <SunriseIcon style={{ color: yellow[400] }}/>
-              </Container>
-            </Grid>
-            <Grid item xs={4}>
-              <Container>
-                <Typography variant="h4">
-                  {sunset && sunset.substr(0, 5)}
-                </Typography>
-                <SunsetIcon style={{ color: grey[400] }}/>
-              </Container>
-            </Grid>
-            <Grid item xs={2}></Grid>
-          </Grid>
+        <Grid item xs={3} />
+        <Grid item xs={1} >
+          <UpArrow fontSize="large" />
         </Grid>
+        <Grid item xs={2}>
+          {forecast &&
+            forecast.weather &&
+            forecast.weather.temp_max &&
+            forecast.weather.temp_min && (<>
+              <Typography variant="h4" align="center">
+                {Math.round(forecast.weather.temp_max)}&deg; F
+              </Typography>
+
+            </>
+            )}
+        </Grid>
+        <Grid item xs={1}>
+          <DownArrow fontSize="large" />
+        </Grid>
+        <Grid item xs={2}>
+          {forecast &&
+            forecast.weather &&
+            forecast.weather.temp_max &&
+            forecast.weather.temp_min && (<>
+              <Typography variant="h4" align="center">
+                {Math.round(forecast.weather.temp_min)}&deg; F
+              </Typography>
+
+            </>
+            )}
+        </Grid>
+        <Grid item xs={3} />
+
+        <Grid item xs={3} />
+        <Grid item xs={6}>
+          <Typography variant="h4" align="center">{currentTemp}&deg; F</Typography>
+        </Grid>
+        <Grid item xs={3} />
+
+        <Grid item xs={3} />
+        <Grid item xs={6}>
+          <Typography variant="subtitle1" align="center">
+            Feels like
+            {feelsLikeTemp}&deg; F
+          </Typography>
+        </Grid>
+        <Grid item xs={3} />
+
+        <Grid item xs={2} />
+        <Grid item xs={1}>
+          <SunriseIcon style={{ color: yellow[400] }} fontSize="large" />
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="h4" >
+            {sunrise && sunrise.substr(0, 5)}
+          </Typography>
+        </Grid>
+        <Grid item xs={2} />
+        <Grid item xs={1}><SunsetIcon style={{ color: grey[400] }} fontSize="large" /></Grid>
+        <Grid item xs={2}>
+          <Typography variant="h4" >
+            {sunset && sunset.substr(0, 5)}
+          </Typography>
+        </Grid>
+        <Grid item xs={2} />
       </Grid>
+
+
     </Container>
   ) : null;
 };
