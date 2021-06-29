@@ -59,7 +59,7 @@ export const CurrentWeather = ({ forecast, news }) => {
             forecast.weather &&
             forecast.weather.temp_max &&
             forecast.weather.temp_min && (<>
-              <Typography variant="h4" align="center">
+              <Typography variant="h5" align="center">
                 {Math.round(forecast.weather.temp_max)}&deg; F
               </Typography>
 
@@ -74,7 +74,7 @@ export const CurrentWeather = ({ forecast, news }) => {
             forecast.weather &&
             forecast.weather.temp_max &&
             forecast.weather.temp_min && (<>
-              <Typography variant="h4" align="center">
+              <Typography variant="h5" align="center">
                 {Math.round(forecast.weather.temp_min)}&deg; F
               </Typography>
 
