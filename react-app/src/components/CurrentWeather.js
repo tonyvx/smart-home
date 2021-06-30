@@ -3,14 +3,13 @@ import {
   Container,
   Grid,
   Typography,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
-import { grey, yellow } from "@material-ui/core/colors";
+import { blue, grey, red, yellow } from "@material-ui/core/colors";
 import SunsetIcon from "@material-ui/icons/Brightness4";
 import SunriseIcon from "@material-ui/icons/Brightness5";
-import DownArrow from '@material-ui/icons/ArrowDownwardRounded';
-import UpArrow from '@material-ui/icons/ArrowUpwardRounded';
 import React from "react";
+import { ThermostatIcon } from "../icons/icons";
 
 export const CurrentWeather = ({ forecast, news }) => {
   const theme = useTheme();
@@ -52,7 +51,7 @@ export const CurrentWeather = ({ forecast, news }) => {
 
         <Grid item xs={3} />
         <Grid item xs={1} >
-          <UpArrow fontSize="large" />
+          <ThermostatIcon fontSize="large" style={{ color: red[900] }} />
         </Grid>
         <Grid item xs={2}>
           {forecast &&
@@ -67,7 +66,7 @@ export const CurrentWeather = ({ forecast, news }) => {
             )}
         </Grid>
         <Grid item xs={1}>
-          <DownArrow fontSize="large" />
+          <ThermostatIcon fontSize="large" style={{ color: blue[900] }} />
         </Grid>
         <Grid item xs={2}>
           {forecast &&
