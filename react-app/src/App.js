@@ -11,12 +11,13 @@ import {
   setLocation,
   setNews,
   setRecentlyPlayed,
-  setPlayBackState,
+  setPlayBackState,showSettingsPage
 } from "./AppContext";
 import { Clock } from "./components/Clock";
 import { CurrentWeather } from "./components/CurrentWeather";
 import { SpotifyPlayer } from "./components/SpotifyPlayer";
 import { SpotifyRecentlyPlayed } from "./components/SpotifyRecentlyPlayed";
+import SettingsIcon from '@material-ui/icons/Settings';
 
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,7 +91,7 @@ export function SmartHomeReactApp() {
 
   const { context, dispatch } = React.useContext(AppContext);
 
-  const { footerInfo, location, news, forecast, currentTrack, playBackState } =
+  const { footerInfo, location, news, forecast } =
     context;
 
   useEffect(() => {
@@ -131,6 +132,13 @@ export function SmartHomeReactApp() {
     });
   }, []);
 
+  const Footer = () => <Container className={classes.paper}>
+    {Object.keys(footerInfo).reduce(
+      (a, v) => a + v + ": " + footerInfo[v] + " ",
+      location.address + " "
+    )}
+    <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={showSettingsPage}/>
+  </Container>;
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
@@ -164,12 +172,7 @@ export function SmartHomeReactApp() {
           <SpotifyRecentlyPlayed />
         </Grid>
       </Grid>
-      <Container className={classes.paper}>
-        {Object.keys(footerInfo).reduce(
-          (a, v) => a + v + ": " + footerInfo[v] + " ",
-          location.address + " "
-        )}
-      </Container>
+      <Footer />
     </Container>
   );
 }

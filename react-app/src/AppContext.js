@@ -62,14 +62,14 @@ export const reducer = (context, action) => {
       const currentTrack =
         action.playBackState && action.playBackState.item
           ? {
-              album: action.playBackState.item.album.name,
-              artist:
-                Array.isArray(action.playBackState.item.artists) &&
+            album: action.playBackState.item.album.name,
+            artist:
+              Array.isArray(action.playBackState.item.artists) &&
                 action.playBackState.item.artists.length > 0
-                  ? action.playBackState.item.artists[0].name
-                  : "",
-              track: action.playBackState.item.name,
-            }
+                ? action.playBackState.item.artists[0].name
+                : "",
+            track: action.playBackState.item.name,
+          }
           : {};
       return {
         ...context,
@@ -105,12 +105,6 @@ export const setForecast = (dispatch, forecast) => {
   console.log("setForecast", forecast);
   dispatch({ type: "FORECAST", forecast });
 };
-
-// export const play = (dispatch, playerStarted) => {
-//   console.log("play", playerStarted);
-//   window.api.send("toMain_Spotify", !playerStarted ? "play" : "pause");
-//   dispatch({ type: "PLAY", playerStarted: !playerStarted });
-// };
 
 export const play = (dispatch, playerStarted, uri) => {
   console.log("play", playerStarted, uri);
@@ -158,3 +152,7 @@ export const setRecentlyPlayed = (dispatch, recentlyPlayed) => {
   console.log("setRecentlyPlayed", recentlyPlayed);
   dispatch({ type: "RECENT", recentlyPlayed });
 };
+
+export const showSettingsPage = () => {
+  window.api.send("toMain_Settings", "show");
+}

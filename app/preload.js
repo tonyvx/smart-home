@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld("api", {
       "toMain_Spotify",
       "toMain_SpotifyVolume",
       "toMain_Playback",
+      "toMain_Settings",
     ];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);

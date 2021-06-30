@@ -121,6 +121,14 @@ app.on("activate", function () {
   }
 });
 
+ipcMain.on("toMain_Settings", (event, message) => {
+  console.log(
+    getFormattedTime() + " : channel: toMain (sendMessage) :",
+    message
+  );
+  sendMessage(message);
+});
+
 ipcMain.on("toMain", (event, message) => {
   console.log(
     getFormattedTime() + " : channel: toMain (sendMessage) :",
