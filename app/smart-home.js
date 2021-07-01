@@ -5,7 +5,6 @@ const path = require("path");
 const contextMenu = require("electron-context-menu");
 const express = require("express");
 
-var weather = require("openweather-apis");
 var cron = require("node-cron");
 
 let location = {};
@@ -26,7 +25,9 @@ const {
   refreshToken,
   getMyCurrentPlaybackState,
   previous,
+  updateDevices,
 } = require("../lib/spotify");
+const { setupSecrets } = require("./creds");
 
 contextMenu({});
 
@@ -35,6 +36,8 @@ contextMenu({});
 let mainWindow;
 const port = 1118;
 function createWindow() {
+
+
   const expressApp = express();
   mainWindow = new BrowserWindow({
     width: 1920,
@@ -53,6 +56,7 @@ function createWindow() {
     authorizationCode();
     location = await getIPLocation();
     const news = await getNews();
+    await updateDevices(mainWindow);
 
     let footerInfo = ["chrome", "node", "electron"].reduce((a, v) => {
       a[v] = process.versions[v];
@@ -121,13 +125,18 @@ app.on("activate", function () {
   }
 });
 
-ipcMain.on("toMain_Settings", (event, message) => {
+ipcMain.on("toMain_Settings", async (event, message) => {
   console.log(
-    getFormattedTime() + " : channel: toMain (sendMessage) :",
+    getFormattedTime() + " : channel: toMain_Settings (update Secrets & devices) :",
     message
   );
-  sendMessage(message);
+  
+  setupSecrets(message);
+
+  const device = await updateDevices(mainWindow);
+  setupSecrets({ "DEVICE_ID": device.id });
 });
+
 
 ipcMain.on("toMain", (event, message) => {
   console.log(

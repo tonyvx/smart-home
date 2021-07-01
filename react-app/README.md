@@ -70,3 +70,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
 https://alexanderallen.medium.com/spotify-web-playback-sdk-feat-electron-50ff930d5c74
+
+### secrets management
+https://github.com/atom/node-keytar
+
+npm install --save-dev electron-rebuild
+./node_modules/.bin/electron-rebuild

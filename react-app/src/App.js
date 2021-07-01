@@ -10,14 +10,15 @@ import {
   setForecast,
   setLocation,
   setNews,
-  setRecentlyPlayed,
-  setPlayBackState,showSettingsPage
+  setRecentlyPlayed, setDevices,
+  setPlayBackState, showSettingsPage,
 } from "./AppContext";
 import { Clock } from "./components/Clock";
 import { CurrentWeather } from "./components/CurrentWeather";
 import { SpotifyPlayer } from "./components/SpotifyPlayer";
 import { SpotifyRecentlyPlayed } from "./components/SpotifyRecentlyPlayed";
 import SettingsIcon from '@material-ui/icons/Settings';
+import { Settings } from "./components/Settings";
 
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,7 +92,7 @@ export function SmartHomeReactApp() {
 
   const { context, dispatch } = React.useContext(AppContext);
 
-  const { footerInfo, location, news, forecast } =
+  const { footerInfo, location, news, forecast, showSettings } =
     context;
 
   useEffect(() => {
@@ -106,6 +107,12 @@ export function SmartHomeReactApp() {
   useEffect(() => {
     window.api.receive("fromMain_Spotify", (resp) => {
       setRecentlyPlayed(dispatch, resp);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.api.receive("fromMain_Settings", (resp) => {
+      setDevices(dispatch, resp);
     });
   }, []);
 
@@ -137,7 +144,7 @@ export function SmartHomeReactApp() {
       (a, v) => a + v + ": " + footerInfo[v] + " ",
       location.address + " "
     )}
-    <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={showSettingsPage}/>
+    <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={() => showSettingsPage(dispatch)} />
   </Container>;
   return (
     <Container className={classes.root}>
@@ -172,6 +179,7 @@ export function SmartHomeReactApp() {
           <SpotifyRecentlyPlayed />
         </Grid>
       </Grid>
+      <Settings open={showSettings} />
       <Footer />
     </Container>
   );

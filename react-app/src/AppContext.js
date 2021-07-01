@@ -12,6 +12,8 @@ export const initialState = {
   location: {},
   footerInfo: {},
   playBackState: {},
+  showSettings: false,
+  devices: []
 };
 
 export const reducer = (context, action) => {
@@ -57,6 +59,16 @@ export const reducer = (context, action) => {
       return {
         ...context,
         location: action.location,
+      };
+    case "SETTING":
+      return {
+        ...context,
+        showSettings: !context.showSettings,
+      };
+    case "DEVICES":
+      return {
+        ...context,
+        devices: action.devices,
       };
     case "PLAYBACK_STATE":
       const currentTrack =
@@ -153,6 +165,11 @@ export const setRecentlyPlayed = (dispatch, recentlyPlayed) => {
   dispatch({ type: "RECENT", recentlyPlayed });
 };
 
-export const showSettingsPage = () => {
-  window.api.send("toMain_Settings", "show");
+export const showSettingsPage = (dispatch, data) => {
+  window.api.send("toMain_Settings", data);
+  dispatch({ type: "SETTING" });
+}
+
+export const setDevices = (dispatch, devices) => {
+  dispatch({ type: "DEVICES", devices });
 }

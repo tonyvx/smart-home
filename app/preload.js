@@ -28,6 +28,7 @@ contextBridge.exposeInMainWorld("api", {
       "fromMain_SpotifyTrack",
       "fromMain_playback",
       "fromMain_Interval_News",
+      "fromMain_Settings",
     ];
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`
