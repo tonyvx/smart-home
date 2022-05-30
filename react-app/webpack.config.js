@@ -1,43 +1,51 @@
+// Generated using webpack-cli https://github.com/webpack/webpack-cli
+
 const path = require("path");
+const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 
+const isProduction = process.env.NODE_ENV == "production";
 
-module.exports = {
-  entry: "./src/index.js",
+const config = {
+  entry: "./src/index.tsx",
   output: {
-    // NEW
-    path: path.join(__dirname,"../public"),
-    filename: "react.js",
-  }, // NEW Ends
-
-  devtool: "eval-source-map",
+    path: path.resolve(__dirname, "../public"),
+  },
+  devServer: {
+    open: true,
+    host: "localhost",
+  },
+  plugins: [
+    // Add your plugins here
+    // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+  ],
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        test: /\.(ts|tsx)$/i,
+        loader: "ts-loader",
+        exclude: ["/node_modules/"],
       },
       {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        type: "asset",
       },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: "asset/resource",
-      },
-      {
-        test: /\.m?js$/,
-        resolve: {
-          fullySpecified: false,
-        },
-      },
-      {
-        test: /spec\.js$/,
-        use: "mocha-loader",
-        exclude: /node_modules/,
-      },
+
+      // Add your rules for custom modules here
+      // Learn more about loaders from https://webpack.js.org/loaders/
     ],
   },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
+  },
+};
+
+module.exports = () => {
+  if (isProduction) {
+    config.mode = "production";
+
+    config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
+  } else {
+    config.mode = "development";
+  }
+  return config;
 };

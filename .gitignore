@@ -3,3 +3,5 @@ react-app/node_modules
 out/
 public/*.js
 .env
+
+backup/

@@ -1,24 +1,20 @@
 import { Container, Divider, Grid, List, ListItem, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import SettingsIcon from '@material-ui/icons/Settings';
 import React, { useEffect } from "react";
 import {
-  AppContext,
-  initialState,
-  reducer,
-  setCurrentTrack,
+  AppContext, AppContextActionInterface, CurrentWeather, initialState as initialAppState, NewsArticle, reducer as appReducer,
   setFooterInfo,
   setForecast,
   setLocation,
-  setNews,
-  setRecentlyPlayed, setDevices,
-  setPlayBackState, showSettingsPage,
-} from "./AppContext";
+  setNews, showSettingsPage
+} from "./contexts/AppContext";
 import { Clock } from "./components/Clock";
-import { CurrentWeather } from "./components/CurrentWeather";
+import { CurrentWeatherUI } from "./components/CurrentWeatherUI";
+import { Settings } from "./components/Settings";
 import { SpotifyPlayer } from "./components/SpotifyPlayer";
 import { SpotifyRecentlyPlayed } from "./components/SpotifyRecentlyPlayed";
-import SettingsIcon from '@material-ui/icons/Settings';
-import { Settings } from "./components/Settings";
+import { initialState as spotifyInitialState, MusicTrack, Playlist, reducer as spotifyReducer, setCurrentTrack, setDevices, setPlayBackState, setRecentlyPlayed, SpotifyContext, Track, UserDevice } from "./contexts/SpotifyContext";
 
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,68 +70,83 @@ export const useStyles = makeStyles((theme) => ({
 }));
 
 export default function App() {
-  const [context, dispatch] = React.useReducer(reducer, initialState);
+  const [context, dispatch] = React.useReducer(appReducer, initialAppState);
   return (
     <AppContext.Provider
       value={{
         context,
         dispatch,
       }}
-    >
-      <SmartHomeReactApp />
+    ><SpotifyWrappedApp />
     </AppContext.Provider>
   );
+}
+
+export function SpotifyWrappedApp() {
+  const [context, dispatch] = React.useReducer(spotifyReducer, spotifyInitialState);
+  return (
+    <SpotifyContext.Provider
+      value={{
+        context,
+        dispatch
+      }}
+    >
+      <SmartHomeReactApp />
+    </SpotifyContext.Provider>);
 }
 
 export function SmartHomeReactApp() {
   const classes = useStyles();
 
   const { context, dispatch } = React.useContext(AppContext);
+  const { context: sContext, dispatch: sDispatch } = React.useContext(SpotifyContext);
 
-  const { footerInfo, location, news, forecast, showSettings } =
+  const { footerInfo, location, news, showSettings } =
     context;
 
   useEffect(() => {
-    window.api.receive("fromMain_FinishLoad", (resp) => {
-      setFooterInfo(dispatch, resp.footerInfo);
-      setLocation(dispatch, resp.location);
-      setForecast(dispatch, resp.forecast);
-      setNews(dispatch, resp.news);
+    window.api.receive("fromMain_FinishLoad", (resp: AppContextActionInterface) => {
+      console.log("fromMain_FinishLoad", resp);
+
+      setFooterInfo(dispatch, resp?.footerInfo || {});
+      setLocation(dispatch, resp?.location || {});
+      if (resp?.forecast) setForecast(dispatch, resp.forecast);
+      setNews(dispatch, resp.news || []);
     });
   }, []);
 
   useEffect(() => {
-    window.api.receive("fromMain_Spotify", (resp) => {
-      setRecentlyPlayed(dispatch, resp);
+    window.api.receive("fromMain_Spotify", (recentlyPlayed: Playlist[]) => {
+      setRecentlyPlayed(sDispatch, recentlyPlayed);
     });
   }, []);
 
   useEffect(() => {
-    window.api.receive("fromMain_Settings", (resp) => {
-      setDevices(dispatch, resp);
+    window.api.receive("fromMain_Settings", (devices: UserDevice[]) => {
+      setDevices(sDispatch, devices);
     });
   }, []);
 
   useEffect(() => {
-    window.api.receive("fromMain_Interval", (resp) => {
-      setForecast(dispatch, resp);
+    window.api.receive("fromMain_Interval", (forecast1: CurrentWeather) => {
+      setForecast(dispatch, forecast1);
     });
   }, []);
   useEffect(() => {
-    window.api.receive("fromMain_SpotifyTrack", (resp) => {
-      setCurrentTrack(dispatch, resp);
-    });
-  }, []);
-
-  useEffect(() => {
-    window.api.receive("fromMain_playback", (resp) => {
-      setPlayBackState(dispatch, resp);
+    window.api.receive("fromMain_SpotifyTrack", (currentTrack: Track) => {
+      setCurrentTrack(sDispatch, currentTrack);
     });
   }, []);
 
   useEffect(() => {
-    window.api.receive("fromMain_Interval_News", (resp) => {
-      setNews(dispatch, resp);
+    window.api.receive("fromMain_playback", (playBackState: MusicTrack) => {
+      setPlayBackState(sDispatch, playBackState);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.api.receive("fromMain_Interval_News", (news1: NewsArticle[]) => {
+      setNews(dispatch, news1);
     });
   }, []);
 
@@ -150,7 +161,7 @@ export function SmartHomeReactApp() {
     <Container className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          <CurrentWeather forecast={forecast} news={news} />
+          <CurrentWeatherUI/>
         </Grid>
         <Grid item xs={6}>
           <Clock />
@@ -164,7 +175,7 @@ export function SmartHomeReactApp() {
         <Grid item xs={12}>
           <List className={classes.listDisplay}>
             {Array.isArray(news) && news.length > 0 && (news.map((newsItem, i) =>
-              <ListItem key={i} align="center">
+              <ListItem key={i}>
                 <Container>
                   <Typography variant="h6" style={{ margin: 2 }}>
                     {newsItem.title}

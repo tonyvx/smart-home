@@ -1,20 +1,29 @@
-var http = require("https");
+import http from "https";
 
 var options = {
   method: "GET",
-  hostname: "freegeoip.app",
-  port: null,
-  path: "/json/",
+  hostname: "api.ipbase.com",
+  port: 443,
+  path: "/v1/json",
   headers: {
     accept: "application/json",
     "content-type": "application/json",
   },
 };
+export interface IPLocation {
+  address: string;
+  ip: string;
+  coordinates: string;
+  lat: string;
+  lon: string;
+  zip_code: string;
+}
+export function getIPLocation() {
+  
 
-function getIPLocation() {
-  return new Promise(function (resolve, reject) {
+  return new Promise<IPLocation>(function (resolve, reject) {
     var req = http.request(options, function (res) {
-      var chunks = [];
+      var chunks: Buffer[] = [];
 
       res.on("data", function (chunk) {
         chunks.push(chunk);
@@ -22,6 +31,7 @@ function getIPLocation() {
 
       res.on("end", function () {
         var body = JSON.parse(Buffer.concat(chunks).toString());
+        console.log("IPLocation",body);
         const address =
           body.city +
           ", " +
@@ -41,10 +51,10 @@ function getIPLocation() {
           zip_code: body.zip_code,
         });
       });
-    });
+    }).on("error", (err) => reject("IPLocation Lookup"+ err));
 
     req.end();
   });
 }
 
-module.exports = { getIPLocation };
+

@@ -1,23 +1,26 @@
 import {
   Avatar,
   Container,
-  Grid,
-  Typography,
+  Grid, Typography,
   useTheme
 } from "@material-ui/core";
 import { blue, grey, red, yellow } from "@material-ui/core/colors";
 import SunsetIcon from "@material-ui/icons/Brightness4";
 import SunriseIcon from "@material-ui/icons/Brightness5";
 import React from "react";
+import { AppContext } from "../contexts/AppContext";
+// import { CurrentWeather } from "../AppContext";
 import { ThermostatIcon } from "../icons/icons";
 
-export const CurrentWeather = ({ forecast, news }) => {
+export const CurrentWeatherUI = () => {
+  const { context, dispatch } = React.useContext(AppContext);
   const theme = useTheme();
+  const { forecast } = context
   const sunrise = forecast && forecast.sunrise ? forecast.sunrise : 0;
   const sunset = forecast && forecast.sunset ? forecast.sunset : 0;
   const weatherIcon = forecast
     ? "http://openweathermap.org/img/w/" + forecast.weather.icon + ".png"
-    : null;
+    : undefined;
   const currentTemp =
     forecast && forecast.weather && forecast.weather.temp > 0
       ? Math.round(forecast.weather.temp)
@@ -32,7 +35,6 @@ export const CurrentWeather = ({ forecast, news }) => {
         <Grid item xs={4} />
         <Grid item xs={1}>
           <Avatar
-            align="center"
             id="wicon"
             src={weatherIcon}
             alt="Weather icon"
@@ -103,14 +105,14 @@ export const CurrentWeather = ({ forecast, news }) => {
         </Grid>
         <Grid item xs={2}>
           <Typography variant="h4" >
-            {sunrise && sunrise.substr(0, 5)}
+            {sunrise && sunrise.substring(0, 5)}
           </Typography>
         </Grid>
         <Grid item xs={2} />
         <Grid item xs={1}><SunsetIcon style={{ color: grey[400] }} fontSize="large" /></Grid>
         <Grid item xs={2}>
           <Typography variant="h4" >
-            {sunset && sunset.substr(0, 5)}
+            {sunset && sunset.substring(0, 5)}
           </Typography>
         </Grid>
         <Grid item xs={2} />
@@ -118,5 +120,5 @@ export const CurrentWeather = ({ forecast, news }) => {
 
 
     </Container>
-  ) : null;
+  ) : <div>No forecast</div>;
 };

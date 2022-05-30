@@ -1,9 +1,9 @@
-const { ipcRenderer, contextBridge } = require("electron");
+import { ipcRenderer, contextBridge } from "electron";
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld("api", {
-  send: (channel, data) => {
+  send: (channel: string, data: any) => {
     // whitelist channels
     let validChannels = [
       "toMain_Play",
@@ -19,7 +19,7 @@ contextBridge.exposeInMainWorld("api", {
       ipcRenderer.send(channel, data);
     }
   },
-  receive: (channel, func) => {
+  receive: (channel: string, func: (...args: any) => void) => {
     let validChannels = [
       "fromMain",
       "fromMain_FinishLoad",
@@ -32,7 +32,7 @@ contextBridge.exposeInMainWorld("api", {
     ];
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`
-      ipcRenderer.on(channel, (event, ...args) => func(...args));
+      ipcRenderer.on(channel, (_event, ...args) => func(...args));
       console.log("receive", channel);
     }
   },

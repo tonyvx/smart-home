@@ -8,13 +8,17 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { useStyles } from "../App";
-import { AppContext, play } from "../AppContext";
-import "react-virtualized/styles.css";
+import { SpotifyContext, play } from "../contexts/SpotifyContext";
+
+export type HoverConfigType = {
+  anchorEl: HTMLDivElement | null;
+  id: string | null;
+}
 
 export const SpotifyRecentlyPlayed = () => {
   const classes = useStyles();
-  const { dispatch, context } = React.useContext(AppContext);
-  const [hover, setHover] = React.useState({ anchorEl: null, id: null });
+  const { dispatch, context } = React.useContext(SpotifyContext);
+  const [hover, setHover] = React.useState<HoverConfigType>({ anchorEl: null, id: null });
 
   const { recentlyPlayed } = context;
 
@@ -22,12 +26,12 @@ export const SpotifyRecentlyPlayed = () => {
     <List className={classes.listHorizontalDisplay}>
       {Array.isArray(recentlyPlayed) &&
         recentlyPlayed.map((item) => (
-          <ListItem key={item.name} align="center" style={{ height: "50%" }}>
+          <ListItem key={item.name} style={{ height: "50%" }}>
             <Container
-              onClick={(event) =>
-                play(dispatch, false, item.uri) &&
+              onClick={(event) => {
+                play(dispatch, item.uri, item.name)
                 setHover({ anchorEl: event.currentTarget, id: item.name })
-              }
+              }}
               onMouseEnter={(event) =>
                 setHover({ anchorEl: event.currentTarget, id: item.name })
               }

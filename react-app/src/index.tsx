@@ -1,13 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { purple, green } from "@material-ui/core/colors";
 import { Paper } from "@material-ui/core";
 
-const theme = createMuiTheme({
+const theme = createTheme({
 
   typography: {
     fontFamily: [
@@ -26,6 +25,11 @@ const theme = createMuiTheme({
     type: "dark",
   },
 });
+declare global {
+  interface Window {
+    api?: any;
+  }
+}
 
 ReactDOM.render(
   // <React.StrictMode>

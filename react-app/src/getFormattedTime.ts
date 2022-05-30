@@ -1,10 +1,10 @@
 function getFormattedTime(currentTime1 = new Date()) {
   return (
-    ("0" + currentTime1.getHours()).substr(-2) +
+    String(currentTime1.getHours()).padStart(2, "0") +
     ":" +
-    ("0" + currentTime1.getMinutes()).substr(-2) +
+    String(currentTime1.getMinutes()).padStart(2, "0") +
     ":" +
-    ("0" + currentTime1.getSeconds()).substr(-2)
+    String(currentTime1.getSeconds()).padStart(2, "0")
   );
 }
 
@@ -12,19 +12,19 @@ function getTimeValues(currentTime1 = new Date()) {
   console.log(currentTime1.getMilliseconds());
   return (
     {
-      hours: ("0" + currentTime1.getHours()).substr(-2), minutes: ("0" + currentTime1.getMinutes()).substr(-2), seconds:
-        ("0" + currentTime1.getSeconds()).substr(-2), milliseconds: currentTime1.getMilliseconds()
+      hours: String(currentTime1.getHours()).padStart(2, "0"), minutes: String(currentTime1.getMinutes()).padStart(2, "0"), seconds:
+        String(currentTime1.getSeconds()).padStart(2, "0"), milliseconds: currentTime1.getMilliseconds()
     }
   );
 }
 
 const formattedDate = () => {
-  let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  let options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   let today = new Date()
   return today.toLocaleDateString("en-US", options);
 }
 
-const getTimeStamp = (unixTime) => {
+const getTimeStamp = (unixTime: number) => {
   let unix_timestamp = unixTime;
   // Create a new JavaScript Date object based on the timestamp
   // multiplied by 1000 so that the argument is in milliseconds, not seconds.
@@ -43,4 +43,4 @@ const getTimeStamp = (unixTime) => {
   // console.log(formattedTime);
   // return formattedTime;
 };
-module.exports = { getFormattedTime, getTimeStamp, getTimeValues, formattedDate };
+export { getFormattedTime, getTimeStamp, getTimeValues, formattedDate };

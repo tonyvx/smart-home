@@ -1,8 +1,9 @@
-import { Divider, List, ListItem, Dialog, Toolbar, IconButton, AppBar, Typography, Button, ListItemText, Slide, TextField, FormControl, InputLabel, Select } from "@material-ui/core";
-import React, { useState } from "react";
-import { AppContext, showSettingsPage } from "../AppContext";
-import CloseIcon from '@material-ui/icons/Close';
+import { AppBar, Button, Dialog, Divider, FormControl, IconButton, InputLabel, List, ListItem, ListItemText, Select, TextField, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
+import React, { ChangeEvent, useState } from "react";
+import { showSettingsPage } from "../contexts/AppContext";
+import { SpotifyContext } from "../contexts/SpotifyContext";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -21,18 +22,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export interface AppCredentials {
+  SPOTIFY_CLIENT_ID: string;
+  SPOTIFY_CLIENT_SECRET: string;
+  AUTHORIZATION: string;
+  DEVICE_ID: string;
+  OPENWEATHER_TOKEN: string;
+}
 
-export const Settings = (props) => {
+export const Settings = (props: { open: boolean }) => {
   const classes = useStyles();
-  const [data, setData] = useState({});
+  const [data, setData] = useState({} as AppCredentials);
 
-  const setupData = (event) => {
-    setData({ ...data, [event.target.name]: event.target.value });
+  const setupData = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    if (event?.target?.name) {
+      setData({ ...data, [event?.target?.name]: event?.target?.value });
+    }
   }
-
-  const { context, dispatch } = React.useContext(AppContext);
+  const setupSelectData = (target: { name: string, value: string }) => {
+    if (target?.name) {
+      setData({ ...data, [target?.name]: target?.value });
+    }
+  }
+  const { context, dispatch } = React.useContext(SpotifyContext);
   const { devices } = context;
-  console.log("settings",devices);
+  console.log("settings", devices);
   return (<Dialog fullScreen open={props.open} onClose={() => showSettingsPage(dispatch)} >
     <AppBar className={classes.appBar} color="secondary">
       <Toolbar >
@@ -70,16 +84,20 @@ export const Settings = (props) => {
             name="DEVICE_ID"
             native
             value={data["DEVICE_ID"]}
-            onChange={setupData}
+            onChange={(name, value) => {
+              if (!!name && !!value) {
+                setupSelectData({ name: String(name), value: String(value) })
+              }
+            }}
             inputProps={{
               name: 'DEVICE_ID',
               id: 'age-native-simple',
             }}
           >
-            {devices.map(device => <option value={device.id} key={device.id}>{device.name}</option>)}
+            {devices.filter(d => !!d.id).map(device => <option value={device.id || ""} key={device.id}>{device.name}</option>)}
           </Select>
         </FormControl>
       </ListItem>
     </List>
-  </Dialog>);
+  </Dialog >);
 };

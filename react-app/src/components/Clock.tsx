@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
 
-import { getFormattedTime, getTimeValues, formattedDate } from "../../../lib/getFormattedTime";
 import React from "react";
+import { formattedDate, getFormattedTime, getTimeValues } from "../getFormattedTime";
 
 export function Clock() {
   const [currentTime, setCurrentTime] = React.useState("00:00:00");
@@ -19,10 +19,10 @@ export function Clock() {
 
   return (
     <>
-      <Typography variant="subtitle1" align="center" padding="10">
+      <Typography variant="subtitle1" align="center">
         {date}
       </Typography>
-      <Typography variant="h1" align="center" padding="10">
+      <Typography variant="h1" align="center" >
         {currentTime}
       </Typography>
     </>
