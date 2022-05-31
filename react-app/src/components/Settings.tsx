@@ -23,16 +23,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface AppCredentials {
-  SPOTIFY_CLIENT_ID: string;
-  SPOTIFY_CLIENT_SECRET: string;
-  AUTHORIZATION: string;
-  DEVICE_ID: string;
-  OPENWEATHER_TOKEN: string;
+  SPOTIFY_CLIENT_ID?: string;
+  SPOTIFY_CLIENT_SECRET?: string;
+  AUTHORIZATION?: string;
+  DEVICE_ID?: string;
+  OPENWEATHER_TOKEN?: string;
+  showSettingsPage: boolean;
 }
 
 export const Settings = (props: { open: boolean }) => {
   const classes = useStyles();
-  const [data, setData] = useState({} as AppCredentials);
+  const [data, setData] = useState({ showSettingsPage: false } as AppCredentials);
 
   const setupData = (event: ChangeEvent<HTMLTextAreaElement>) => {
     if (event?.target?.name) {
@@ -47,10 +48,11 @@ export const Settings = (props: { open: boolean }) => {
   const { context, dispatch } = React.useContext(SpotifyContext);
   const { devices } = context;
   console.log("settings", devices);
-  return (<Dialog fullScreen open={props.open} onClose={() => showSettingsPage(dispatch)} >
+
+  return (<Dialog fullScreen open={props.open} onClose={() => { showSettingsPage(dispatch); }} >
     <AppBar className={classes.appBar} color="secondary">
       <Toolbar >
-        <IconButton edge="start" color="inherit" onClick={() => showSettingsPage(dispatch)} aria-label="close">
+        <IconButton edge="start" color="inherit" onClick={() => { showSettingsPage(dispatch) }} aria-label="close">
           <CloseIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>

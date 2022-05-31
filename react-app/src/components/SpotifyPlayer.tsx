@@ -85,9 +85,9 @@ export const SpotifyPlayer = () => {
             <VolumeUpIcon />
           </Button>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} alignContent={"center"}>
           {context?.playBackState?.device && (
-            <Typography variant="overline" align="center">
+            <Typography variant="overline" >
               {context?.playBackState?.device?.type}
               {" : "}
               {context?.playBackState?.device?.name}

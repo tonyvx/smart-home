@@ -13,7 +13,7 @@ const rejectError = (reject: (reason?: any) => void, method: string) => (reason?
 const authorizationCode = async () => {
   console.log("authorizationCode");
 
-  const spotifyClientId = await secrets("SPOTIFY_CLIENT_ID")
+  const spotifyClientId = secrets("SPOTIFY_CLIENT_ID")
   const spotifyApi1 = new SpotifyWebApi({
     redirectUri: "http://localhost:1118/callback",
     clientId: spotifyClientId || undefined
@@ -46,8 +46,8 @@ const authorizationCode = async () => {
 
 const accessTokenFromAuthCode = async (code: string) => {
   console.log("accessTokenFromAuthCode");
-  const spotifyClientId = await secrets("SPOTIFY_CLIENT_ID");
-  const spotifyClientSecret = await secrets("SPOTIFY_CLIENT_SECRET");
+  const spotifyClientId = secrets("SPOTIFY_CLIENT_ID");
+  const spotifyClientSecret = secrets("SPOTIFY_CLIENT_SECRET");
   spotifyApi = new SpotifyWebApi({
     redirectUri: "http://localhost:1118/callback",
     clientId: spotifyClientId || undefined,
@@ -164,7 +164,7 @@ const getMyDevices = () => {
     // Get a User's Available Devices
     spotifyApi.getMyDevices().then(
       function (data) {
-        console.log(data);
+        console.log(data?.body?.devices);
 
         resolve(data.body.devices);
       },
@@ -199,7 +199,6 @@ const connectToSpeaker = async (deviceId: string) => {
   console.log("devices", devices);
   const device =
     devices.find((d) => d.id === deviceId) ||
-    devices.find((d) => d.type === "CASTVIDEO") ||
     devices.find((d) => d.type === "Speaker");
 
   return new Promise<SpotifyApi.UserDevice>((resolve, reject) => {
@@ -259,8 +258,8 @@ const getMyRecentlyPlayedTracks = () => {
   });
 };
 const setVolume = async (volume: number) => {
-  console.log("setVolume", volume);
-  const deviceId = await secrets("DEVICE_ID") || undefined;
+  const deviceId = secrets("DEVICE_ID") ;
+  console.log("setVolume", volume, deviceId);
   return new Promise<number>((resolve, reject) => {
     spotifyApi
       .setVolume(volume, {
@@ -277,14 +276,11 @@ const setVolume = async (volume: number) => {
 };
 
 const play = async (uri: string) => {
-  console.log("play", uri);
-
-  const deviceId = await secrets("DEVICE_ID");
-  uri && (await pause());
+  const deviceId = secrets("DEVICE_ID");
+  console.log("play ", uri, " on ", deviceId);
   deviceId && connectToSpeaker(deviceId);
 
-  return new Promise<SpotifyApi.CurrentPlaybackResponse>(async (resolve, reject) => {
-    await pause()
+  return new Promise<SpotifyApi.CurrentPlaybackResponse>((resolve, reject) => {
     spotifyApi.play({ context_uri: uri }).then(
       async function () {
         const playbackState1 = await getMyCurrentPlaybackState();
@@ -296,9 +292,10 @@ const play = async (uri: string) => {
   });
 };
 const pause = () => {
-  console.log("pause");
+  const deviceId = secrets("DEVICE_ID");
+  console.log("pause " , deviceId);
   return new Promise<string>(async (resolve, reject) => {
-    const deviceId = await secrets("DEVICE_ID");
+    
     if (!deviceId) {
       reject("Device is not selected")
     } else {
@@ -313,9 +310,9 @@ const pause = () => {
   });
 };
 const next = () => {
-  console.log("next");
+  const deviceId = secrets("DEVICE_ID");
+  console.log("next ", deviceId);
   return new Promise<SpotifyApi.CurrentPlaybackResponse>(async (resolve, reject) => {
-    const deviceId = await secrets("DEVICE_ID");
     if (!deviceId) {
       reject("Device is not selected")
     } else {
@@ -340,9 +337,9 @@ const updateDevices = async (mainWindow: BrowserWindow) => {
 
 
 const previous = () => {
-  console.log("next");
+  const deviceId = secrets("DEVICE_ID");
+  console.log("previous ", deviceId);
   return new Promise<SpotifyApi.CurrentPlaybackResponse>(async (resolve, reject) => {
-    const deviceId = await secrets("DEVICE_ID");
     if (!deviceId) {
       reject("Device is not selected")
     } else {

@@ -9,9 +9,8 @@ import { getFormattedTime } from "./lib/getFormattedTime";
 import { getIPLocation, IPLocation } from "./lib/getIPLocation";
 import { getNews } from "./lib/getNews";
 import { accessTokenFromAuthCode, authorizationCode, currentPlayingTrack, getFeaturedPlaylists, getMyCurrentPlaybackState, next, pause, play, previous, refreshToken, setVolume, updateDevices } from "./lib/spotify";
-
-
-var cron = require("node-cron");
+import Store from 'electron-store';
+import cron from "node-cron";
 
 let location: IPLocation;
 
@@ -129,7 +128,7 @@ ipcMain.on("toMain_Settings", async (_event, message) => {
       message
     );
     if (message) {
-      setupSecrets(message);
+      setupSecrets(message,new Store());
 
       // const device = await updateDevices(mainWindow);
       // device && setupSecrets({ "DEVICE_ID": device.id });
@@ -234,7 +233,7 @@ cron.schedule("*/59 * * * *", async () => {
   await refreshToken();
 });
 
-cron.schedule("* 6,9,12,15,18,21 * * *", async () => {
+cron.schedule("*/10 * * * *", async () => {
   console.log(getFormattedTime() + " : updating news");
   const news = await getNews();
   mainWindow?.webContents.send("fromMain_Interval_News", news);

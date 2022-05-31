@@ -1,6 +1,7 @@
 import weather from "openweather-apis";
 import { getTimeStamp } from "./getFormattedTime";
 import { secrets } from "../creds";
+
 weather.setLang("en");
 // English - en, Russian - ru, Italian - it, Spanish - es (or sp),
 // Ukrainian - uk (or ua), German - de, Portuguese - pt,Romanian - ro,
@@ -22,7 +23,8 @@ weather.setLang("en");
 weather.setUnits("imperial");
 
 // check http://openweathermap.org/appid#get for get the APPID
-secrets("OPENWEATHER_TOKEN").then(value => weather.setAPPID(value));
+// secrets("OPENWEATHER_TOKEN", new Store()).then(value => weather.setAPPID(value));
+weather.setAPPID(secrets("OPENWEATHER_TOKEN"));
 
 declare module 'openweather-apis';
 

@@ -65,10 +65,8 @@ export const setLocation = (dispatch: Dispatch<AppContextActionInterface>, locat
 };
 
 export const showSettingsPage = (dispatch: Dispatch<AppContextActionInterface>, data: AppCredentials | null = null) => {
-  if (data) {
-    window.api.send("toMain_Settings", data);
-    dispatch({ type: "SETTING" });
-  }
+  dispatch({ type: "SETTING", showSettings: true });
+  window.api.send("toMain_Settings", data);
 }
 
 export interface AppContextInterface {

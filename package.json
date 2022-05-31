@@ -5,10 +5,7 @@
   "main": "app/smart-home.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "rebuild": "electron-rebuild -f -w keytar",
+
     "build": "./node_modules/.bin/tsc",
     "fe-build": "cd react-app && npx webpack",
     "run": "cd out && npx electron smart-home.js"
@@ -25,12 +22,8 @@
   },
   "homepage": "https://github.com/tonyvx/smart-home#readme",
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.61",
-    "@electron-forge/maker-deb": "^6.0.0-beta.61",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
-    "@electron-forge/maker-zip": "^6.0.0-beta.61",
-    "@types/electron": "^1.6.10",
     "@types/express": "^4.17.13",
+    "@types/node-cron": "^3.0.1",
     "@types/spotify-web-api-node": "^5.0.7",
     "electron": "^16.0.2",
     "electron-prebuilt-compile": "8.2.0",
@@ -39,13 +32,9 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "electron-context-menu": "^3.1.1",
-    "electron-oauth2": "^3.0.0",
-    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.0.1",
     "express": "^4.17.1",
     "googleapis": "^87.0.0",
-    "keytar": "^7.7.0",
-    "node-abi": "^3.5.0",
-    "node-addon-api": "^4.2.0",
     "node-cron": "^3.0.0",
     "openweather-apis": "^4.4.1",
     "spotify-web-api-node": "^5.0.2",

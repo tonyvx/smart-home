@@ -91,12 +91,13 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "app/**/*.ts",
+    "app/**/*.ts", "backup/lib/getIPLocationV2.ts",
   ],
   "exclude": [
     "node_modules",
     "src/spec",
     "../lib",
-    "../react-app"
+    "../react-app",
+    "backup"
   ],
 }

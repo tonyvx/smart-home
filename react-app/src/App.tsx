@@ -151,17 +151,17 @@ export function SmartHomeReactApp() {
   }, []);
 
   const Footer = () => <Container className={classes.paper}>
-    {Object.keys(footerInfo).reduce(
+    <Typography> {Object.keys(footerInfo).reduce(
       (a, v) => a + v + ": " + footerInfo[v] + " ",
       location.address + " "
-    )}
-    <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={() => showSettingsPage(dispatch)} />
+    )}</Typography>
+    <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={() => showSettingsPage(dispatch, null)} />
   </Container>;
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          <CurrentWeatherUI/>
+          <CurrentWeatherUI />
         </Grid>
         <Grid item xs={6}>
           <Clock />

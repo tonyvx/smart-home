@@ -25,7 +25,7 @@ export function getNews() {
 
         res.on("end", function () {
           var body = JSON.parse(Buffer.concat(chunks).toString());
-          console.log("news", body);
+          console.log("news items", body?.articles.length);
 
           body?.message && reject(body.message)
 
