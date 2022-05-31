@@ -5,3 +5,7 @@ public/*.js
 .env
 
 backup/
+
+token.json
+credentials.json
+forge.config.js
