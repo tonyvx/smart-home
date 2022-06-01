@@ -7,7 +7,7 @@ import {
   setFooterInfo,
   setForecast,
   setLocation,
-  setNews, showSettingsPage
+  setNews, updateStoreWithSettings, showSettingsPage
 } from "./contexts/AppContext";
 import { Clock } from "./components/Clock";
 import { CurrentWeatherUI } from "./components/CurrentWeatherUI";
@@ -155,7 +155,7 @@ export function SmartHomeReactApp() {
       (a, v) => a + v + ": " + footerInfo[v] + " ",
       location.address + " "
     )}</Typography>
-    <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={() => showSettingsPage(dispatch, null)} />
+    <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={() => showSettingsPage(dispatch, true)} />
   </Container>;
   return (
     <Container className={classes.root}>
@@ -190,7 +190,7 @@ export function SmartHomeReactApp() {
           <SpotifyRecentlyPlayed />
         </Grid>
       </Grid>
-      <Settings open={showSettings} />
+      <Settings open={context.showSettings} />
       <Footer />
     </Container>
   );

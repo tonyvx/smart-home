@@ -5,6 +5,7 @@ public/*.js
 .env
 
 backup/
+smart-home-app/
 
 token.json
 credentials.json

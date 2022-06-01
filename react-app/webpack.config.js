@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV == "production";
 const config = {
   entry: "./src/index.tsx",
   output: {
-    path: path.resolve(__dirname, "../public"),
+    path: path.resolve(__dirname, "../smart-home-app/public"),
   },
   devServer: {
     open: true,

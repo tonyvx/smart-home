@@ -32,7 +32,7 @@ export const reducer = (context: AppContextInterface, action: AppContextActionIn
     case "SETTING":
       return {
         ...context,
-        showSettings: action.showSettings || context.showSettings,
+        showSettings: (action.showSettings == undefined ? context.showSettings : action.showSettings),
       };
     case "FORECAST":
       return {
@@ -64,9 +64,14 @@ export const setLocation = (dispatch: Dispatch<AppContextActionInterface>, locat
   dispatch({ type: "LOCATION", location });
 };
 
-export const showSettingsPage = (dispatch: Dispatch<AppContextActionInterface>, data: AppCredentials | null = null) => {
-  dispatch({ type: "SETTING", showSettings: true });
-  window.api.send("toMain_Settings", data);
+export const updateStoreWithSettings = (dispatch: Dispatch<AppContextActionInterface>, settings: AppCredentials) => {
+  window.api.send("toMain_Settings", settings);
+  dispatch({ type: "SETTING", showSettings: false });
+}
+
+export const showSettingsPage = (dispatch: Dispatch<AppContextActionInterface>, showSettings: boolean) => {
+  dispatch({ type: "SETTING", showSettings });
+  window.api.send("toMain_Settings");
 }
 
 export interface AppContextInterface {

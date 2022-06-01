@@ -2,7 +2,7 @@ import { AppBar, Button, Dialog, Divider, FormControl, IconButton, InputLabel, L
 import { makeStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import React, { ChangeEvent, useState } from "react";
-import { showSettingsPage } from "../contexts/AppContext";
+import { AppContext, updateStoreWithSettings, showSettingsPage } from "../contexts/AppContext";
 import { SpotifyContext } from "../contexts/SpotifyContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,20 +45,21 @@ export const Settings = (props: { open: boolean }) => {
       setData({ ...data, [target?.name]: target?.value });
     }
   }
-  const { context, dispatch } = React.useContext(SpotifyContext);
-  const { devices } = context;
+  const { context: sContext } = React.useContext(SpotifyContext);
+  const { context, dispatch } = React.useContext(AppContext);
+  const { devices } = sContext;
   console.log("settings", devices);
 
-  return (<Dialog fullScreen open={props.open} onClose={() => { showSettingsPage(dispatch); }} >
+  return (<Dialog fullScreen open={context.showSettings} onClose={() => showSettingsPage(dispatch, false)} >
     <AppBar className={classes.appBar} color="secondary">
       <Toolbar >
-        <IconButton edge="start" color="inherit" onClick={() => { showSettingsPage(dispatch) }} aria-label="close">
+        <IconButton edge="start" color="inherit" onClick={() => showSettingsPage(dispatch, false)} aria-label="close">
           <CloseIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
           Settings
         </Typography>
-        <Button autoFocus color="inherit" onClick={() => { showSettingsPage(dispatch, data); }}>
+        <Button autoFocus color="inherit" onClick={() => updateStoreWithSettings(dispatch, data)}>
           save
         </Button>
       </Toolbar>

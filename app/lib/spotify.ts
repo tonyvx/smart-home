@@ -329,9 +329,9 @@ const next = () => {
   });
 };
 
-const updateDevices = async (mainWindow: BrowserWindow) => {
+const updateDevices = async (mainWindow: BrowserWindow|null) => {
   const devices = await getMyDevices();
-  mainWindow.webContents.send("fromMain_Settings", devices);
+  mainWindow?.webContents.send("fromMain_Settings", devices);
   return devices.find((_d, i) => i === 0);
 }
 

@@ -45,7 +45,7 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadFile("../public/index.html");
+  mainWindow.loadFile("./public/index.html");
 
   mainWindow.webContents.on("did-finish-load", async () => {
     authorizationCode();
@@ -129,8 +129,8 @@ ipcMain.on("toMain_Settings", async (_event, message) => {
     );
     if (message) {
       setupSecrets(message,new Store());
-
-      // const device = await updateDevices(mainWindow);
+    
+      await updateDevices(mainWindow);
       // device && setupSecrets({ "DEVICE_ID": device.id });
     }
   } catch (e) {

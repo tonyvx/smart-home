@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
 
     "build": "./node_modules/.bin/tsc",
+    "assets": "cp -R public ./smart-home-app/.",
     "fe-build": "cd react-app && npx webpack",
-    "run": "cd out && npx electron smart-home.js"
+    "start": "cd smart-home-app && npx electron smart-home.js"
   },
   "keywords": [],
   "author": "tonyvx",
