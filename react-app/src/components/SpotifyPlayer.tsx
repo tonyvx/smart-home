@@ -17,19 +17,23 @@ export const SpotifyPlayer = () => {
   const { playerStarted, playBackState, currentTrack, volume, playlist } = context;
   playBackState?.item &&
     setTimeout(
-      () => window.api.send("toMain_Playback", null),
+      () => {
+        window.api.send("toMain_Playback", null); console.log("Check in ", playBackState?.item?.duration_ms);
+      },
       playBackState?.item?.duration_ms
     );
   return (
     <Container>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Typography variant="h5" align="center">
-            {currentTrack.track} - {currentTrack.artist}  ({volume}%)
-          </Typography>
-          <Typography variant="h5" align="center">
-            {playlist}
-          </Typography>
+          {currentTrack.track && <>
+            <Typography variant="h5" align="center">
+              {currentTrack.track} - {currentTrack.artist}  ({volume}%)
+            </Typography>
+            <Typography variant="h5" align="center">
+              {playlist}
+            </Typography>
+          </>}
         </Grid>
 
         <Grid item xs={2}>
@@ -85,9 +89,9 @@ export const SpotifyPlayer = () => {
             <VolumeUpIcon />
           </Button>
         </Grid>
-        <Grid item xs={12} alignContent={"center"}>
+        <Grid item xs={12}>
           {context?.playBackState?.device && (
-            <Typography variant="overline" >
+            <Typography variant="overline" align={'center'} component="div">
               {context?.playBackState?.device?.type}
               {" : "}
               {context?.playBackState?.device?.name}
@@ -95,6 +99,6 @@ export const SpotifyPlayer = () => {
           )}
         </Grid>
       </Grid>
-    </Container>
+    </Container >
   );
 };

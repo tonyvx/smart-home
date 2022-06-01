@@ -258,7 +258,7 @@ const getMyRecentlyPlayedTracks = () => {
   });
 };
 const setVolume = async (volume: number) => {
-  const deviceId = secrets("DEVICE_ID") ;
+  const deviceId = secrets("DEVICE_ID");
   console.log("setVolume", volume, deviceId);
   return new Promise<number>((resolve, reject) => {
     spotifyApi
@@ -278,6 +278,9 @@ const setVolume = async (volume: number) => {
 const play = async (uri: string) => {
   const deviceId = secrets("DEVICE_ID");
   console.log("play ", uri, " on ", deviceId);
+  if (!uri) {
+    uri = (await getMyRecentlyPlayedTracks()).find((_value, index) => index == 0)?.uri || ""
+  }
   deviceId && connectToSpeaker(deviceId);
 
   return new Promise<SpotifyApi.CurrentPlaybackResponse>((resolve, reject) => {
@@ -293,9 +296,9 @@ const play = async (uri: string) => {
 };
 const pause = () => {
   const deviceId = secrets("DEVICE_ID");
-  console.log("pause " , deviceId);
+  console.log("pause ", deviceId);
   return new Promise<string>(async (resolve, reject) => {
-    
+
     if (!deviceId) {
       reject("Device is not selected")
     } else {
@@ -329,7 +332,7 @@ const next = () => {
   });
 };
 
-const updateDevices = async (mainWindow: BrowserWindow|null) => {
+const updateDevices = async (mainWindow: BrowserWindow | null) => {
   const devices = await getMyDevices();
   mainWindow?.webContents.send("fromMain_Settings", devices);
   return devices.find((_d, i) => i === 0);
