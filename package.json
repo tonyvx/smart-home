@@ -2,17 +2,19 @@
   "name": "smart-home",
   "version": "1.0.0",
   "description": "smart home app",
-  "main": "app/smart-home.js",
+  "main": "smart-home.js",
+  "author": "anthony.valantra@gmail.com",
+  "maintainer": "anthony.valantra@gmail.com",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-
-    "build": "./node_modules/.bin/tsc",
+    "build": "./node_modules/.bin/tsc && cp -R public ./smart-home-app/",
     "assets": "cp -R public ./smart-home-app/.",
     "fe-build": "cd react-app && npx webpack",
-    "start": "cd smart-home-app && npx electron smart-home.js"
+    "start": "cd smart-home-app && npx electron smart-home.js",
+    "dist": "electron-builder --linux -c.extraMetadata.main=smart-home-app/smart-home.js",
+    "rpi": "electron-builder -c.extraMetadata.main=smart-home-app/smart-home.js --linux --armv7l --arm64"
   },
   "keywords": [],
-  "author": "tonyvx",
   "license": "ISC",
   "repository": {
     "type": "git",
@@ -27,8 +29,8 @@
     "@types/node-cron": "^3.0.1",
     "@types/spotify-web-api-node": "^5.0.7",
     "electron": "^16.0.2",
-    "electron-prebuilt-compile": "8.2.0",
-    "electron-rebuild": "^3.2.5"
+    "electron-builder": "^23.0.3",
+    "electron-prebuilt-compile": "8.2.0"
   },
   "dependencies": {
     "dotenv": "^10.0.0",
@@ -41,5 +43,22 @@
     "spotify-web-api-node": "^5.0.2",
     "typescript": "^4.7.2",
     "v8-compile-cache": "^2.3.0"
+  },
+  "build": {
+    "appId": "smart.home",
+    "extraFiles": [
+      "assets"
+    ],
+    "linux": {
+      "maintainer": "anthony.valantra@gmail.com",
+      "synopsis": "smart home app",
+      "description": "smart home app",
+      "icon": "public/smart-home.png",
+      "category": "home",
+      "target": [
+        "appImage"
+      ]
+    },
+    "deb": {}
   }
 }
