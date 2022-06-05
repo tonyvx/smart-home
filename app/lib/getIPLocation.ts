@@ -1,4 +1,6 @@
 import http from "https";
+import { IPLocation } from "../models/IPLocation";
+import { log } from "../util/utils";
 
 var options = {
   method: "GET",
@@ -10,18 +12,10 @@ var options = {
     "content-type": "application/json",
   },
 };
-export interface IPLocation {
-  address: string;
-  ip: string;
-  coordinates: string;
-  lat: string;
-  lon: string;
-  zip_code: string;
-}
-export function getIPLocation() {
-  
 
-  return new Promise<IPLocation>(function (resolve, reject) {
+const logger = log("getIPLocation");
+export function getIPLocation() {
+  return new Promise<IPLocation>(function (resolve) {
     var req = http.request(options, function (res) {
       var chunks: Buffer[] = [];
 
@@ -31,27 +25,16 @@ export function getIPLocation() {
 
       res.on("end", function () {
         var body = JSON.parse(Buffer.concat(chunks).toString());
-        console.log("IPLocation",body);
-        const address =
-          body.city +
-          ", " +
-          body.region_code +
-          ", " +
-          body.country_code +
-          ", " +
-          body.zip_code;
+        logger("request", body);
+        const { city, region_code, country_code, zip_code, ip, latitude, longitude } = body;
+        let ipLocation = new IPLocation(city, region_code, country_code, zip_code, ip, latitude, longitude)
 
-        const coordinates = "(" + body.latitude + ", " + body.longitude + ")";
-        resolve({
-          address,
-          ip: body.ip,
-          coordinates,
-          lat: body.latitude,
-          lon: body.longitude,
-          zip_code: body.zip_code,
-        });
+        resolve(ipLocation);
       });
-    }).on("error", (err) => reject("IPLocation Lookup"+ err));
+    }).on("error", (err) => {
+      logger("request", err?.message);
+      resolve({} as IPLocation);
+    });
 
     req.end();
   });

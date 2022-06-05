@@ -1,51 +1,56 @@
 import { BrowserWindow } from "electron";
 import SpotifyWebApi from "spotify-web-api-node";
 import { secrets } from "../creds";
+import { log } from "../util/utils";
 
 let spotifyApi: SpotifyWebApi;
 
+const logger = log("SpotifyWebApi")
+
 const rejectError = (reject: (reason?: any) => void, method: string) => (reason?: any) => {
   //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-  console.log(method, reason);
-  reject(reason);
+  logger(method, reason.body);
+  reject(reason.body);
 };
 
 const authorizationCode = async () => {
-  console.log("authorizationCode");
+  logger("authorizationCode");
 
   const spotifyClientId = secrets("SPOTIFY_CLIENT_ID")
-  const spotifyApi1 = new SpotifyWebApi({
-    redirectUri: "http://localhost:1118/callback",
-    clientId: spotifyClientId || undefined
-  });
+  if (!!spotifyClientId && spotifyClientId.trim() !== "") {
+    const spotifyApi1 = new SpotifyWebApi({
+      redirectUri: "http://localhost:1118/callback",
+      clientId: spotifyClientId
+    });
 
-  const scopes = [
-    "user-read-private",
-    "user-read-email",
-    "user-modify-playback-state",
-    "user-read-playback-state",
-    "user-read-currently-playing",
-    "user-read-recently-played",
-    "playlist-read-private",
-  ];
+    const scopes = [
+      "user-read-private",
+      "user-read-email",
+      "user-modify-playback-state",
+      "user-read-playback-state",
+      "user-read-currently-playing",
+      "user-read-recently-played",
+      "playlist-read-private",
+    ];
 
-  var authorizeURL = spotifyApi1.createAuthorizeURL(scopes, "spotify");
+    var authorizeURL = spotifyApi1.createAuthorizeURL(scopes, "spotify");
 
-  const window = new BrowserWindow({
-    title: "spotifyToken",
-    alwaysOnTop: true,
-    autoHideMenuBar: true,
-    webPreferences: {
-      nodeIntegration: false,
-    },
-    height: 400,
-    width: 800,
-  });
-  window.loadURL(authorizeURL);
+    const window = new BrowserWindow({
+      title: "spotifyToken",
+      alwaysOnTop: true,
+      autoHideMenuBar: true,
+      webPreferences: {
+        nodeIntegration: false,
+      },
+      height: 400,
+      width: 800,
+    });
+    window.loadURL(authorizeURL);
+  }
 };
 
 const accessTokenFromAuthCode = async (code: string) => {
-  console.log("accessTokenFromAuthCode");
+  logger("accessTokenFromAuthCode");
   const spotifyClientId = secrets("SPOTIFY_CLIENT_ID");
   const spotifyClientSecret = secrets("SPOTIFY_CLIENT_SECRET");
   spotifyApi = new SpotifyWebApi({
@@ -53,45 +58,45 @@ const accessTokenFromAuthCode = async (code: string) => {
     clientId: spotifyClientId || undefined,
     clientSecret: spotifyClientSecret || undefined,
   });
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<string>((resolve, _reject) => {
     spotifyApi.authorizationCodeGrant(code).then(
       function (data) {
-        console.log("The token expires in " + data.body["expires_in"]);
+        logger("The token expires in " + data?.body?.expires_in);
 
         // Set the access token on the API object to use it in later calls
         spotifyApi.setAccessToken(data.body["access_token"]);
         spotifyApi.setRefreshToken(data.body["refresh_token"]);
         resolve("success");
       },
-      rejectError(reject, "authorizationCodeGrant")
+      rejectError(resolve, "authorizationCodeGrant")
     );
   });
 };
 
 const refreshToken = () => {
-  console.log("refreshToken");
-  return new Promise<string>((resolve, reject) => {
+  logger("refreshToken");
+  return new Promise<string>((resolve, _reject) => {
     spotifyApi.refreshAccessToken().then(
       function (data) {
-        console.log("The access token has been refreshed!");
+        logger("The access token has been refreshed!");
 
         // Save the access token so that it's used in future calls
         spotifyApi.setAccessToken(data.body["access_token"]);
         resolve("success");
       },
-      rejectError(reject, "refreshAccessToken")
+      rejectError(resolve, "refreshAccessToken")
     );
   });
 };
 
 const currentPlayingTrack = () => {
-  console.log("currentPlayingTrack");
-  return new Promise<Track>((resolve, reject) => {
+  logger("currentPlayingTrack");
+  return new Promise<Track>((resolve, _reject) => {
     spotifyApi.getMyCurrentPlayingTrack().then(
       function (data) {
         if (data?.body?.item) {
           const { name: track, album, artists } = data.body.item as SpotifyApi.TrackObjectFull
-          console.log("Now playing: " + track);
+          logger("Now playing: " + track);
           resolve({
             track,
             album: album.name,
@@ -100,19 +105,19 @@ const currentPlayingTrack = () => {
           });
         }
       },
-      rejectError(reject, "getMyCurrentPlayingTrack")
+      rejectError(resolve, "getMyCurrentPlayingTrack")
     );
   });
 };
 
 const recentTrack = () => {
-  console.log("recentTrack");
-  return new Promise<Track>((resolve, reject) => {
+  logger("recentTrack");
+  return new Promise<Track>((resolve, _reject) => {
     spotifyApi.getMyRecentlyPlayedTracks().then(
       function (data) {
         if (data?.body?.items?.length > 0) {
           const { name, album, artists } = data.body.items[0].track
-          console.log("Now playing: " + name);
+          logger("recentTrack - " + name);
           resolve({
             track: name,
             album: album.name,
@@ -122,15 +127,15 @@ const recentTrack = () => {
           });
         }
       },
-      rejectError(reject, "getMyRecentlyPlayedTracks")
+      rejectError(resolve, "getMyRecentlyPlayedTracks")
     );
   });
 };
 
 const getFeaturedPlaylists = () => {
   //  Retrieve featured playlists
-  console.log("getFeaturedPlaylists");
-  return new Promise<Playlist[]>((resolve, reject) => {
+  logger("getFeaturedPlaylists");
+  return new Promise<Playlist[]>((resolve, _reject) => {
     spotifyApi
       .getUserPlaylists({
         limit: 12,
@@ -153,50 +158,49 @@ const getFeaturedPlaylists = () => {
           });
           resolve(playlists);
         },
-        rejectError(reject, "getUserPlaylists")
+        rejectError(resolve, "getUserPlaylists")
       );
   });
 };
 
 const getMyDevices = () => {
-  console.log("getMyDevices");
-  return new Promise<SpotifyApi.UserDevice[]>((resolve, reject) => {
+  logger("getMyDevices");
+  return new Promise<SpotifyApi.UserDevice[]>((resolve, _reject) => {
     // Get a User's Available Devices
     spotifyApi.getMyDevices().then(
       function (data) {
-        console.log(data?.body?.devices);
+        logger("getMyDevices", data?.body?.devices);
 
         resolve(data.body.devices);
       },
-      rejectError(reject, "getMyDevices")
+      rejectError(resolve, "getMyDevices")
     );
   });
 };
 
 const getMyCurrentPlaybackState = () => {
-  console.log("getMyCurrentPlaybackState");
-  return new Promise<SpotifyApi.CurrentPlaybackResponse>((resolve, reject) => {
+  logger("getMyCurrentPlaybackState");
+  return new Promise<SpotifyApi.CurrentPlaybackResponse>((resolve, _reject) => {
     // Get Information About The User's Current Playback State
     spotifyApi.getMyCurrentPlaybackState().then(
       function (data) {
         // Output items
         if (data.body && data.body.is_playing) {
-          console.log("User is currently playing something!");
+          logger("User is currently playing something!");
         } else {
-          console.log("User is not playing anything, or doing so in private.");
+          logger("User is not playing anything, or doing so in private.");
         }
         resolve(data.body);
       },
-      rejectError(reject, "getMyCurrentPlaybackState")
+      rejectError(resolve, "getMyCurrentPlaybackState")
     );
   });
 };
 
 const connectToSpeaker = async (deviceId: string) => {
-  console.log("connectToSpeaker", deviceId);
+  logger("connectToSpeaker", deviceId);
   // Get a User's Available Devices
   const devices = await getMyDevices();
-  console.log("devices", devices);
   const device =
     devices.find((d) => d.id === deviceId) ||
     devices.find((d) => d.type === "Speaker");
@@ -207,11 +211,11 @@ const connectToSpeaker = async (deviceId: string) => {
 
       spotifyApi.transferMyPlayback([device.id]).then(
         async function () {
-          console.log("Transfering playback to " + device.id);
+          logger("Transfering playback to " + device.id);
           await getMyCurrentPlaybackState();//TODO
           resolve(device);
         },
-        rejectError(reject, "transferMyPlayback")
+        rejectError(resolve, "transferMyPlayback")
       );
     } else {
       reject("No device are connected to spotify account")
@@ -220,8 +224,8 @@ const connectToSpeaker = async (deviceId: string) => {
 };
 
 const getMyRecentlyPlayedTracks = () => {
-  console.log("getMyRecentlyPlayedTracks");
-  return new Promise<Track[]>((resolve, reject) => {
+  logger("getMyRecentlyPlayedTracks");
+  return new Promise<Track[]>((resolve, _reject) => {
     spotifyApi
       .getMyRecentlyPlayedTracks({
         limit: 20,
@@ -229,7 +233,7 @@ const getMyRecentlyPlayedTracks = () => {
       .then(
         function (data) {
           // Output items
-          console.log(
+          logger(
             "Your 20 most recently played tracks are:",
             data.body.items.length
           );
@@ -253,50 +257,50 @@ const getMyRecentlyPlayedTracks = () => {
             )
           );
         },
-        rejectError(reject, "getMyCurrentPlaybackState")
+        rejectError(resolve, "getMyCurrentPlaybackState")
       );
   });
 };
 const setVolume = async (volume: number) => {
   const deviceId = secrets("DEVICE_ID");
-  console.log("setVolume", volume, deviceId);
-  return new Promise<number>((resolve, reject) => {
+  logger("setVolume (" + volume + ") ", deviceId);
+  return new Promise<number>((resolve, _reject) => {
     spotifyApi
       .setVolume(volume, {
         device_id: deviceId
       })
       .then(
         function () {
-          console.log("Volume", volume);
+          // console.log("Volume", volume);
           resolve(volume)
         },
-        rejectError(reject, "setVolume")
+        rejectError(resolve, "setVolume")
       );
   })
 };
 
 const play = async (uri: string) => {
   const deviceId = secrets("DEVICE_ID");
-  console.log("play ", uri, " on ", deviceId);
+  logger("play on " + deviceId, uri);
   if (!uri) {
     uri = (await getMyRecentlyPlayedTracks()).find((_value, index) => index == 0)?.uri || ""
   }
   deviceId && connectToSpeaker(deviceId);
 
-  return new Promise<SpotifyApi.CurrentPlaybackResponse>((resolve, reject) => {
+  return new Promise<SpotifyApi.CurrentPlaybackResponse>((resolve, _reject) => {
     spotifyApi.play({ context_uri: uri }).then(
       async function () {
         const playbackState1 = await getMyCurrentPlaybackState();
-        console.log("Playback started");
+        logger("Playback started");
         resolve(playbackState1);
       },
-      rejectError(reject, "play")
+      rejectError(resolve, "play")
     );
   });
 };
 const pause = () => {
   const deviceId = secrets("DEVICE_ID");
-  console.log("pause ", deviceId);
+  logger("pause ", deviceId);
   return new Promise<string>(async (resolve, reject) => {
 
     if (!deviceId) {
@@ -304,29 +308,29 @@ const pause = () => {
     } else {
       spotifyApi.pause({ device_id: deviceId }).then(
         function () {
-          console.log("Playback pause");
+          // console.log("Playback pause");
           resolve(deviceId);
         },
-        rejectError(reject, "pause")
+        rejectError(resolve, "pause")
       );
     }
   });
 };
 const next = () => {
   const deviceId = secrets("DEVICE_ID");
-  console.log("next ", deviceId);
+  logger("next ", deviceId);
   return new Promise<SpotifyApi.CurrentPlaybackResponse>(async (resolve, reject) => {
     if (!deviceId) {
       reject("Device is not selected")
     } else {
       spotifyApi.skipToNext({ device_id: deviceId }).then(
         async function () {
-          console.log("Skip to next");
+          // console.log("Skip to next");
           const playbackState1 = await getMyCurrentPlaybackState();
-          console.log("Playback started");
+          logger("Playback started");
           resolve(playbackState1);
         },
-        rejectError(reject, "skipToNext")
+        rejectError(resolve, "skipToNext")
       )
     };
   });
@@ -341,19 +345,19 @@ const updateDevices = async (mainWindow: BrowserWindow | null) => {
 
 const previous = () => {
   const deviceId = secrets("DEVICE_ID");
-  console.log("previous ", deviceId);
+  logger("previous ", deviceId);
   return new Promise<SpotifyApi.CurrentPlaybackResponse>(async (resolve, reject) => {
     if (!deviceId) {
       reject("Device is not selected")
     } else {
       spotifyApi.skipToPrevious({ device_id: deviceId }).then(
         async () => {
-          console.log("Skip to next ");
+          // logger("Skip to next ");
           const playbackState1 = await getMyCurrentPlaybackState();
-          console.log("Playback started");
+          logger("Playback started");
           resolve(playbackState1);
         },
-        rejectError(reject, "skipToPrevious")
+        rejectError(resolve, "skipToPrevious")
       )
     };
   });

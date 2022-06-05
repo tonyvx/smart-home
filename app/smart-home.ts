@@ -6,11 +6,13 @@ import "v8-compile-cache";
 import { setupSecrets } from "./creds";
 import { getForecast } from "./lib/getForecast";
 import { getFormattedTime } from "./lib/getFormattedTime";
-import { getIPLocation, IPLocation } from "./lib/getIPLocation";
-import { getNews } from "./lib/getNews";
+import { getIPLocation } from "./lib/getIPLocation";
+import { IPLocation } from "./models/IPLocation";
+import { Article, getNews } from "./lib/getNews";
 import { accessTokenFromAuthCode, authorizationCode, currentPlayingTrack, getFeaturedPlaylists, getMyCurrentPlaybackState, next, pause, play, previous, refreshToken, setVolume, updateDevices } from "./lib/spotify";
 import Store from 'electron-store';
 import cron from "node-cron";
+import { elog } from "./util/utils";
 
 let location: IPLocation;
 
@@ -22,7 +24,7 @@ contextMenu({});
 let mainWindow: BrowserWindow | null;
 const port = 1118;
 
-
+const logger = elog("smart-home")
 function createWindow() {
   // Modify the user agent for all requests to the following urls.
   const filter = {
@@ -49,8 +51,13 @@ function createWindow() {
 
   mainWindow.webContents.on("did-finish-load", async () => {
     authorizationCode();
-    location = await getIPLocation();
-    const news = await getNews();
+
+    let news: Article[] = [];
+
+    try {
+      location = await getIPLocation();
+      news = await getNews();
+    } catch (e) { }
 
     let footerInfo = ["chrome", "node", "electron"].reduce((a, v) => {
       a[v] = process.versions[v] || "";
@@ -101,9 +108,7 @@ function createWindow() {
   });
 
   expressApp.listen(port, () => {
-    console.log(
-      getFormattedTime() + ` :  listening at http://localhost:${port}`
-    );
+    logger("listening at", "http://localhost:${port}`");
   });
 }
 
@@ -123,44 +128,35 @@ app.on("activate", function () {
 
 ipcMain.on("toMain_Settings", async (_event, message) => {
   try {
-    console.log(
-      getFormattedTime() + " : channel: toMain_Settings (update Secrets & devices) :",
+    logger("channel: toMain_Settings (update Secrets & devices) ",
       message
     );
     if (message) {
-      setupSecrets(message,new Store());
-    
+      setupSecrets(message, new Store());
+
       await updateDevices(mainWindow);
       // device && setupSecrets({ "DEVICE_ID": device.id });
     }
   } catch (e) {
-    console.log("toMain_Settings", e);
+    logger("channel: toMain_Settings", e as {});
   }
 });
 
 
 ipcMain.on("toMain", (_event, message) => {
-  console.log(
-    getFormattedTime() + " : channel: toMain (sendMessage) :",
-    message
-  );
+  logger("channel: toMain (sendMessage)", message);
   sendMessage(message);
 });
 
 ipcMain.on("toMain_Playback", async (_event, message) => {
-  console.log(
-    getFormattedTime() + " : channel: toMain_Playback (sendMessage) :",
-    message
-  );
+  logger("channel: toMain_Playback (sendMessage)", message);
   const playbackState1 = await getMyCurrentPlaybackState();
   if (playbackState1)
     mainWindow?.webContents.send("fromMain_playback", playbackState1);
 });
 
 ipcMain.on("toMain_Spotify", async (_event, action) => {
-  console.log(
-    getFormattedTime() + " : channel: toMain_Play :", action
-  );
+  logger("channel: toMain_Play", action);
   switch (action.action ? action.action : action) {
     case "play":
       const playbackState1 = await play(action.uri);
@@ -183,7 +179,7 @@ ipcMain.on("toMain_Spotify", async (_event, action) => {
       break;
 
     default:
-      console.log(getFormattedTime() + " : not implemented");
+      logger("not implemented");
   }
   setTimeout(async () => {
     const currentTrack = await currentPlayingTrack();
@@ -200,10 +196,7 @@ ipcMain.on("toMain_Spotify", async (_event, action) => {
 });
 
 ipcMain.on("toMain_SpotifyVolume", (_event, volume) => {
-  console.log(
-    getFormattedTime() + " : channel: toMain_SpotifyVolume :",
-    volume
-  );
+  logger("channel: toMain_SpotifyVolume",volume);
   setVolume(volume);
 });
 
@@ -211,30 +204,30 @@ const publish = (channel: string, message: any) => {
   mainWindow?.webContents.send(channel, message);
 };
 const sendMessage = (message: any) => {
-  console.log(getFormattedTime() + " : sendMessage", message);
+  logger("sendMessage", message);
   new Notification({
     title: "Smart Home",
     body: message,
   }).show();
 };
 
-cron.schedule("*/10 * * * *", async () => {
+cron.schedule("*/59 * * * *", async () => {
+  logger("getForecast")
   const forecast = await getForecast(
     location["zip_code"],
     location["lat"],
     location["lon"]
   );
   mainWindow?.webContents.send("fromMain_Interval", forecast);
-  console.log(getFormattedTime() + " : running a task 10 minutes");
 });
 
 cron.schedule("*/59 * * * *", async () => {
-  console.log(getFormattedTime() + " : refreshing token");
+  logger("refreshing token");
   await refreshToken();
 });
 
-cron.schedule("*/10 * * * *", async () => {
-  console.log(getFormattedTime() + " : updating news");
+cron.schedule("*/59 * * * *", async () => {
+  logger("updating news");
   const news = await getNews();
   mainWindow?.webContents.send("fromMain_Interval_News", news);
 });

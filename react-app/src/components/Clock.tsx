@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Paper, Typography } from "@material-ui/core";
 
 import React from "react";
 import { formattedDate, getFormattedTime, getTimeValues } from "../getFormattedTime";
@@ -18,13 +18,15 @@ export function Clock() {
   }, []);
 
   return (
-    <>
+    <Paper style={{
+      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    }}>
       <Typography variant="subtitle1" align="center">
         {date}
       </Typography>
       <Typography variant="h1" align="center" >
         {currentTime}
       </Typography>
-    </>
+    </Paper>
   );
 }

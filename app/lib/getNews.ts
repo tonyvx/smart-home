@@ -1,4 +1,5 @@
 import http from "https";
+import { log } from "../util/utils";
 
 var options = {
   method: "GET",
@@ -13,6 +14,8 @@ var options = {
   },
 };
 
+const logger = log("getNews");
+
 export function getNews() {
   return new Promise<Article[]>(function (resolve, reject) {
     var req = http
@@ -25,18 +28,16 @@ export function getNews() {
 
         res.on("end", function () {
           var body = JSON.parse(Buffer.concat(chunks).toString());
-          console.log("news items", body?.articles.length);
-
-          body?.message && reject(body.message)
+          logger("request", body?.articles?.length);
 
           resolve(
-            body?.articles?.map((item: Article) => item) || [{title : "no news"}]
+            body?.articles?.map((item: Article) => item) || [{ title: "no news" }]
           );
         });
       })
       .on("error", (err) => {
-        console.log("Error: " + err.message);
-        reject(err)
+        logger("request", err?.message);
+        resolve([{ title: "Error fetching news" }] as Article[])
       });
 
     req.end();

@@ -1,6 +1,6 @@
 {
   "name": "smart-home",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "smart home app",
   "main": "smart-home.js",
   "author": "anthony.valantra@gmail.com",
@@ -9,10 +9,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/tsc && cp -R public ./smart-home-app/",
     "assets": "cp -R public ./smart-home-app/.",
-    "fe-build": "cd react-app && npx webpack",
+    "fe-build": "cd react-app && npx webpack && cp smart-home-app/public/main.js public/main.js",
     "start": "cd smart-home-app && npx electron smart-home.js",
     "dist": "electron-builder --linux -c.extraMetadata.main=smart-home-app/smart-home.js",
-    "rpi": "electron-builder -c.extraMetadata.main=smart-home-app/smart-home.js --linux --armv7l --arm64"
+    "rpi": "electron-builder -c.extraMetadata.main=smart-home-app/smart-home.js --linux --armv7l"
   },
   "keywords": [],
   "license": "ISC",

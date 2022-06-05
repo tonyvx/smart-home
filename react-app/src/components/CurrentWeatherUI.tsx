@@ -16,21 +16,22 @@ export const CurrentWeatherUI = () => {
   const { context, dispatch } = React.useContext(AppContext);
   const theme = useTheme();
   const { forecast } = context
-  const sunrise = forecast && forecast.sunrise ? forecast.sunrise : 0;
-  const sunset = forecast && forecast.sunset ? forecast.sunset : 0;
-  const weatherIcon = forecast
+  const sunrise = forecast?.sunrise ? forecast.sunrise : "--";
+  const sunset = forecast?.sunset ? forecast.sunset : "--";
+  const weatherIcon = forecast?.weather?.icon
     ? "http://openweathermap.org/img/w/" + forecast.weather.icon + ".png"
     : undefined;
-  const currentTemp =
-    forecast && forecast.weather && forecast.weather.temp > 0
-      ? Math.round(forecast.weather.temp)
-      : "";
-  const feelsLikeTemp = forecast
+  const currentTemp = forecast?.weather?.temp && forecast?.weather?.temp > 0
+    ? Math.round(forecast?.weather?.temp)
+    : "--";
+  const feelsLikeTemp = forecast?.weather?.feels_like
     ? " " + Math.round(forecast.weather.feels_like)
-    : "";
-  const weatherDescription = forecast ? forecast.weather.description : "";
+    : " -- ";
+  const weatherDescription = forecast?.weather?.description || "---";
   return forecast ? (
-    <Container>
+    <Container style={{
+      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    }}>
       <Grid container spacing={3}>
         <Grid item xs={4} />
         <Grid item xs={1}>

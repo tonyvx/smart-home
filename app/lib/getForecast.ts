@@ -1,6 +1,7 @@
 import weather from "openweather-apis";
-import { getTimeStamp } from "./getFormattedTime";
 import { secrets } from "../creds";
+import { CurrentWeather, OpenWeather } from "../models/Weather";
+import { log } from "../util/utils";
 
 weather.setLang("en");
 // English - en, Russian - ru, Italian - it, Spanish - es (or sp),
@@ -28,70 +29,18 @@ weather.setAPPID(secrets("OPENWEATHER_TOKEN"));
 
 declare module 'openweather-apis';
 
-export type OpenWeather = {
-  current: {
-    temp: string;
-    feels_like: string;
-    wind_speed: string;
-    sunrise: string;
-    sunset: string;
-    weather: [{
-      main: string;
-      description: string;
-      icon: string;
-    }];
-  };
-  daily: [{
-    temp: {
-      min: string;
-      max: string;
-    };
-  }];
-};
+const logger = log("getForecast")
 
-export type CurrentWeather = {
-  weather: {
-    temp: string;
-    feels_like: string;
-    temp_min: string;
-    temp_max: string;
-    description: string;
-    icon: string;
-  }
-  wind: string;
-  sunrise: string;
-  sunset: string;
-};
-
-function getForecast(_zipcode: string, lat: string, lon: string) {
+export const getForecast = (_zipcode: string, lat: string, lon: string) => {
   weather.setCoordinate(lat, lon);
-
-
-  return new Promise<CurrentWeather>((resolve, reject) =>
+  return new Promise<CurrentWeather>((resolve, _reject) =>
     weather.getWeatherOneCall(function (err: Error, JSONObj: OpenWeather) {
       if (err) {
-        console.log(err);
-        reject(err);
+        logger("Error", err);
+        resolve({} as CurrentWeather);
       }
-
-      JSONObj && resolve({
-        weather: {
-          temp: JSONObj.current.temp,
-          feels_like: JSONObj.current.feels_like,
-          temp_min: JSONObj.daily[0].temp.min,
-          temp_max: JSONObj.daily[0].temp.max,
-          description:
-            JSONObj.current.weather[0].main +
-            ", " +
-            JSONObj.current.weather[0].description,
-          icon: JSONObj.current.weather[0].icon,
-        },
-        wind: JSONObj.current.wind_speed,
-        sunrise: getTimeStamp(JSONObj.current.sunrise),
-        sunset: getTimeStamp(JSONObj.current.sunset),
-      });
+      logger("request", JSONObj?.current)
+      JSONObj && resolve(new CurrentWeather(JSONObj));
     })
   );
 }
-
-export { getForecast };

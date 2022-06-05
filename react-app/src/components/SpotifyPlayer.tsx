@@ -23,7 +23,9 @@ export const SpotifyPlayer = () => {
       playBackState?.item?.duration_ms
     );
   return (
-    <Container>
+    <Container style={{
+      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    }}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           {currentTrack.track && <>

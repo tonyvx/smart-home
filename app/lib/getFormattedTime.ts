@@ -43,4 +43,3 @@ export const getTimeStamp = (unixTime: string) => {
   // console.log(formattedTime);
   // return formattedTime;
 };
-// module.exports = { getFormattedTime, getTimeStamp, getTimeValues, formattedDate };

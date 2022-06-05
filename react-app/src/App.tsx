@@ -1,34 +1,38 @@
-import { Container, Divider, Grid, List, ListItem, Typography } from "@material-ui/core";
+import { Container, Divider, Grid, List, ListItem, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SettingsIcon from '@material-ui/icons/Settings';
 import React, { useEffect } from "react";
-import {
-  AppContext, AppContextActionInterface, CurrentWeather, initialState as initialAppState, NewsArticle, reducer as appReducer,
-  setFooterInfo,
-  setForecast,
-  setLocation,
-  setNews, updateStoreWithSettings, showSettingsPage
-} from "./contexts/AppContext";
 import { Clock } from "./components/Clock";
 import { CurrentWeatherUI } from "./components/CurrentWeatherUI";
 import { Settings } from "./components/Settings";
 import { SpotifyPlayer } from "./components/SpotifyPlayer";
 import { SpotifyRecentlyPlayed } from "./components/SpotifyRecentlyPlayed";
+import {
+  AppContext, AppContextActionInterface, CurrentWeather, initialState as initialAppState, NewsArticle, reducer as appReducer,
+  setFooterInfo,
+  setForecast,
+  setLocation,
+  setNews, showSettingsPage
+} from "./contexts/AppContext";
 import { initialState as spotifyInitialState, MusicTrack, Playlist, reducer as spotifyReducer, setCurrentTrack, setDevices, setPlayBackState, setRecentlyPlayed, SpotifyContext, Track, UserDevice } from "./contexts/SpotifyContext";
+import { backgroundImage1 } from "./images/background";
 
 export const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     height: "100vh",
     maxWidth: 1700,
+    backgroundImage: `url(${backgroundImage1.trim()})`,
+    backgroundSize: "100%"
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     textAlign: "center",
     color: theme.palette.text.secondary,
     position: "absolute",
     bottom: 0,
     width: "100%",
+    margin: theme.spacing(2),
   },
   list: {
     "&::-webkit-scrollbar": { width: 0, height: 0 },
@@ -43,6 +47,8 @@ export const useStyles = makeStyles((theme) => ({
     width: 1400,
     overflowY: "auto",
     height: 300,
+
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
 
   listDisplay: {
@@ -65,6 +71,7 @@ export const useStyles = makeStyles((theme) => ({
     '&::-webkit-scrollbar-thumb:hover': {
       background: '#000'
     },
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
 
   },
 }));
@@ -150,15 +157,22 @@ export function SmartHomeReactApp() {
     });
   }, []);
 
-  const Footer = () => <Container className={classes.paper}>
-    <Typography> {Object.keys(footerInfo).reduce(
-      (a, v) => a + v + ": " + footerInfo[v] + " ",
-      location.address + " "
-    )}</Typography>
-    <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={() => showSettingsPage(dispatch, true)} />
-  </Container>;
+  const Footer = () => <Grid container spacing={1} className={classes.paper}>
+    <Grid item xs={10}>
+      <Typography> {Object.keys(footerInfo).reduce(
+        (a, v) => a + v + ": " + footerInfo[v] || "-" + " ",
+        location?.address || "-" + " "
+      )}</Typography>
+    </Grid>
+    <Grid item xs={2}>
+      <SettingsIcon style={{ marginLeft: 8, marginRight: 8 }} onClick={() => showSettingsPage(dispatch, true)} />
+    </Grid>
+  </Grid>
+
+
+
   return (
-    <Container className={classes.root}>
+    <Container className={classes.root} >
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <CurrentWeatherUI />
@@ -195,3 +209,7 @@ export function SmartHomeReactApp() {
     </Container>
   );
 }
+function rgba(arg0: number, arg1: number, arg2: number, arg3: number): string | import("@material-ui/styles").PropsFunc<{}, string | undefined> | undefined {
+  throw new Error("Function not implemented.");
+}
+
