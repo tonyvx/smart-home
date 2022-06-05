@@ -19,7 +19,7 @@ export function Clock() {
 
   return (
     <Paper style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', marginBottom: 16
     }}>
       <Typography variant="subtitle1" align="center">
         {date}

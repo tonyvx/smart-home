@@ -47,15 +47,14 @@ export const useStyles = makeStyles((theme) => ({
     width: 1400,
     overflowY: "auto",
     height: 300,
-
+    margin: 16,
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
 
   listDisplay: {
     width: 1400,
     overflowY: "auto",
-    height: 300,
-
+    height: 300, margin: 16,
     '&::-webkit-scrollbar': {
       width: 10
     },
@@ -160,8 +159,8 @@ export function SmartHomeReactApp() {
   const Footer = () => <Grid container spacing={1} className={classes.paper}>
     <Grid item xs={10}>
       <Typography> {Object.keys(footerInfo).reduce(
-        (a, v) => a + v + ": " + footerInfo[v] || "-" + " ",
-        location?.address || "-" + " "
+        (a, v) => a + v + ": " + (footerInfo[v] || "-") + " ",
+        (location?.address || "-") + " "
       )}</Typography>
     </Grid>
     <Grid item xs={2}>
@@ -177,17 +176,17 @@ export function SmartHomeReactApp() {
         <Grid item xs={6}>
           <CurrentWeatherUI />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} style={{ padding: 16 }}>
           <Clock />
           <SpotifyPlayer />
         </Grid>
-        <Grid item xs={12}>
-          <Typography align="center" variant="h4">
+        <Grid item xs={12} style={{ padding: 16 }}>
+          <Typography align="center" variant="h4" style={{ margin: 16 }}>
             News
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <List className={classes.listDisplay}>
+        <Grid item xs={12} style={{ padding: 16 }}>
+          <List className={classes.listDisplay} style={{ margin: 16 }}>
             {Array.isArray(news) && news.length > 0 && (news.map((newsItem, i) =>
               <ListItem key={i}>
                 <Container>
@@ -200,7 +199,7 @@ export function SmartHomeReactApp() {
             )
             )}</List>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{ padding: 16 }}>
           <SpotifyRecentlyPlayed />
         </Grid>
       </Grid>

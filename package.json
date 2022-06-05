@@ -53,7 +53,7 @@
       "maintainer": "anthony.valantra@gmail.com",
       "synopsis": "smart home app",
       "description": "smart home app",
-      "icon": "public/smart-home.png",
+      "icon": "../public/smart-home.png",
       "category": "home",
       "target": [
         "appImage"

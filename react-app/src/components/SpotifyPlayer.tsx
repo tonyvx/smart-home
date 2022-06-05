@@ -24,23 +24,21 @@ export const SpotifyPlayer = () => {
     );
   return (
     <Container style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', marginTop: 24
     }}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          {currentTrack.track && <>
-            <Typography variant="h5" align="center">
-              {currentTrack.track} - {currentTrack.artist}  ({volume}%)
-            </Typography>
-            <Typography variant="h5" align="center">
-              {playlist}
-            </Typography>
-          </>}
+          <Typography variant="h5" align="center" style={{ height: "1.5rem" }}>
+            {currentTrack.track ? `${currentTrack.track} - ${currentTrack.artist} (${volume} %)` : " "}
+          </Typography>
+          <Typography variant="h5" align="center" style={{ height: "1.5rem" }}>
+            {currentTrack.track ? playlist : " "}
+          </Typography>
         </Grid>
 
         <Grid item xs={2}>
           <Button
-            variant="outlined"
+            variant="contained"
             onClick={() => play(dispatch, currentTrack.uri)}
           >
             {!playerStarted ? (
@@ -51,24 +49,24 @@ export const SpotifyPlayer = () => {
           </Button>
         </Grid>
         <Grid item xs={2}>
-          <Button variant="outlined" onClick={() => skipToPrevious(dispatch, playerStarted)}>
+          <Button variant="contained" onClick={() => skipToPrevious(dispatch, playerStarted)}>
             <SkipPreviousIcon />
           </Button>
         </Grid>
         <Grid item xs={2}>
-          <Button variant="outlined" onClick={() => skipToNext(dispatch, playerStarted)}>
+          <Button variant="contained" onClick={() => skipToNext(dispatch, playerStarted)}>
             <SkipNextIcon />
           </Button>
         </Grid>
         <Grid item xs={2}>
           {context.volume > 0 && (
-            <Button variant="outlined" onClick={() => mute(dispatch, volume)}>
+            <Button variant="contained" onClick={() => mute(dispatch, volume)}>
               <VolumeMuteIcon />
             </Button>
           )}
           {context.volume === 0 && (
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={() => increaseVolume(dispatch, volume)}
             >
               <VolumeOffIcon />
@@ -77,7 +75,7 @@ export const SpotifyPlayer = () => {
         </Grid>
         <Grid item xs={2}>
           <Button
-            variant="outlined"
+            variant="contained"
             onClick={() => decreaseVolume(dispatch, volume)}
           >
             <VolumeDownIcon />
@@ -85,20 +83,16 @@ export const SpotifyPlayer = () => {
         </Grid>
         <Grid item xs={2}>
           <Button
-            variant="outlined"
+            variant="contained"
             onClick={() => increaseVolume(dispatch, volume)}
           >
             <VolumeUpIcon />
           </Button>
         </Grid>
         <Grid item xs={12}>
-          {context?.playBackState?.device && (
-            <Typography variant="overline" align={'center'} component="div">
-              {context?.playBackState?.device?.type}
-              {" : "}
-              {context?.playBackState?.device?.name}
-            </Typography>
-          )}
+          <Typography variant="overline" align={'center'} component="div" style={{ height: "1.5rem" }}>
+            {context?.playBackState?.device ? `${context?.playBackState?.device?.type} : ${context?.playBackState?.device?.name}` : " "}
+          </Typography>
         </Grid>
       </Grid>
     </Container >

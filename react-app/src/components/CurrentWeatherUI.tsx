@@ -30,7 +30,7 @@ export const CurrentWeatherUI = () => {
   const weatherDescription = forecast?.weather?.description || "---";
   return forecast ? (
     <Container style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', margin: 16
     }}>
       <Grid container spacing={3}>
         <Grid item xs={4} />
@@ -46,7 +46,7 @@ export const CurrentWeatherUI = () => {
           ></Avatar>
         </Grid>
         <Grid item xs={3}>
-          <Typography variant="h5" align="center" style={{ margin: 12 }}>
+          <Typography variant="h6" align="center" style={{ margin: 12 }}>
             {weatherDescription}
           </Typography>
         </Grid>
@@ -61,7 +61,7 @@ export const CurrentWeatherUI = () => {
             forecast.weather &&
             forecast.weather.temp_max &&
             forecast.weather.temp_min && (<>
-              <Typography variant="h5" align="center">
+              <Typography variant="h6" align="center">
                 {Math.round(forecast.weather.temp_max)}&deg; F
               </Typography>
 
@@ -76,7 +76,7 @@ export const CurrentWeatherUI = () => {
             forecast.weather &&
             forecast.weather.temp_max &&
             forecast.weather.temp_min && (<>
-              <Typography variant="h5" align="center">
+              <Typography variant="h6" align="center">
                 {Math.round(forecast.weather.temp_min)}&deg; F
               </Typography>
 
@@ -87,7 +87,7 @@ export const CurrentWeatherUI = () => {
 
         <Grid item xs={3} />
         <Grid item xs={6}>
-          <Typography variant="h4" align="center">{currentTemp}&deg; F</Typography>
+          <Typography variant="h5" align="center">{currentTemp}&deg; F</Typography>
         </Grid>
         <Grid item xs={3} />
 
@@ -105,14 +105,14 @@ export const CurrentWeatherUI = () => {
           <SunriseIcon style={{ color: yellow[400] }} fontSize="large" />
         </Grid>
         <Grid item xs={2}>
-          <Typography variant="h4" >
+          <Typography variant="h5" >
             {sunrise && sunrise.substring(0, 5)}
           </Typography>
         </Grid>
         <Grid item xs={2} />
         <Grid item xs={1}><SunsetIcon style={{ color: grey[400] }} fontSize="large" /></Grid>
         <Grid item xs={2}>
-          <Typography variant="h4" >
+          <Typography variant="h5" >
             {sunset && sunset.substring(0, 5)}
           </Typography>
         </Grid>
