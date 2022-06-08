@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld("api", {
       "fromMain_playback",
       "fromMain_Interval_News",
       "fromMain_Settings",
+      "fromMain_background",
     ];
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`

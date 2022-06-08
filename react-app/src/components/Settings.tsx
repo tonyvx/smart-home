@@ -28,6 +28,7 @@ export interface AppCredentials {
   AUTHORIZATION?: string;
   DEVICE_ID?: string;
   OPENWEATHER_TOKEN?: string;
+  BACKGROUND_FOLDER?: string;
   showSettingsPage: boolean;
 }
 
@@ -78,6 +79,11 @@ export const Settings = (props: { open: boolean }) => {
         <TextField name="SPOTIFY_CLIENT_ID" id="standard-basic" label="Spotify Client ID" color="secondary" style={{ marginRight: 8 }} value={data["SPOTIFY_CLIENT_ID"]} onChange={setupData} />
         <TextField name="SPOTIFY_CLIENT_SECRET" id="standard-basic" label="Spotify Client Secrets" color="secondary" value={data["SPOTIFY_CLIENT_SECRET"]} onChange={setupData} />
       </ListItem>
+      <ListItem >
+        <ListItemText primary="Folder containing background pictures" secondary="Photos will randomly selected from folder for use as wallpaper" />
+        <TextField name="BACKGROUND_FOLDER" id="standard-basic" label="Background picture folder" color="secondary" style={{ marginRight: 8 }} value={data["BACKGROUND_FOLDER"]} onChange={setupData} />
+      </ListItem>
+
       <Divider />
       <ListItem >
         <ListItemText primary="Wireless Speaker for Spotify" secondary="Select Wireless Player for Spotify" />

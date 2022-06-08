@@ -1,9 +1,9 @@
 import { app, BrowserWindow, ipcMain, Notification, session } from "electron";
 import contextMenu from "electron-context-menu";
-import express from "express";
+import express, { response } from "express";
 import path from "path";
 import "v8-compile-cache";
-import { setupSecrets } from "./creds";
+import { secrets, setupSecrets } from "./creds";
 import { getForecast } from "./lib/getForecast";
 import { getFormattedTime } from "./lib/getFormattedTime";
 import { getIPLocation } from "./lib/getIPLocation";
@@ -13,6 +13,10 @@ import { accessTokenFromAuthCode, authorizationCode, currentPlayingTrack, getFea
 import Store from 'electron-store';
 import cron from "node-cron";
 import { elog } from "./util/utils";
+import * as fs from "fs";
+import imageToBase64 from 'image-to-base64';
+import { resolveModuleName, resolveModuleNameFromCache } from "typescript";
+
 
 let location: IPLocation;
 
@@ -63,6 +67,8 @@ function createWindow() {
       a[v] = process.versions[v] || "";
       return a;
     }, {} as { [process: string]: string });
+
+    mainWindow?.webContents.send("fromMain_background", (await randomImage()));
 
     mainWindow?.webContents.send("fromMain_FinishLoad", {
       footerInfo,
@@ -196,7 +202,7 @@ ipcMain.on("toMain_Spotify", async (_event, action) => {
 });
 
 ipcMain.on("toMain_SpotifyVolume", (_event, volume) => {
-  logger("channel: toMain_SpotifyVolume",volume);
+  logger("channel: toMain_SpotifyVolume", volume);
   setVolume(volume);
 });
 
@@ -231,3 +237,22 @@ cron.schedule("*/59 * * * *", async () => {
   const news = await getNews();
   mainWindow?.webContents.send("fromMain_Interval_News", news);
 });
+
+cron.schedule("*/5 * * * *", async () => {
+  logger("updating background");
+  const image = await randomImage()
+  mainWindow?.webContents.send("fromMain_background", image);
+});
+
+
+const randomImage = async (pathToBackground: string = secrets("BACKGROUND_FOLDER")) => {
+  const files = fs.readdirSync(pathToBackground)
+  const background = pathToBackground + "/" + files[Math.floor(Math.random() * files.length)]
+  return new Promise((resolve, _reject) =>
+    imageToBase64(background).then(r => {
+      resolve("data:image/png;base64," + r)
+    }))
+}
+
+
+

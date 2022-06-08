@@ -1,7 +1,7 @@
 import { Container, Divider, Grid, List, ListItem, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SettingsIcon from '@material-ui/icons/Settings';
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Clock } from "./components/Clock";
 import { CurrentWeatherUI } from "./components/CurrentWeatherUI";
 import { Settings } from "./components/Settings";
@@ -15,14 +15,12 @@ import {
   setNews, showSettingsPage
 } from "./contexts/AppContext";
 import { initialState as spotifyInitialState, MusicTrack, Playlist, reducer as spotifyReducer, setCurrentTrack, setDevices, setPlayBackState, setRecentlyPlayed, SpotifyContext, Track, UserDevice } from "./contexts/SpotifyContext";
-import { backgroundImage1 } from "./images/background";
 
 export const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     height: "100vh",
     maxWidth: 1700,
-    backgroundImage: `url(${backgroundImage1.trim()})`,
     backgroundSize: "100%"
   },
   paper: {
@@ -104,6 +102,8 @@ export function SpotifyWrappedApp() {
 export function SmartHomeReactApp() {
   const classes = useStyles();
 
+  const [background, setBackground] = useState("");
+
   const { context, dispatch } = React.useContext(AppContext);
   const { context: sContext, dispatch: sDispatch } = React.useContext(SpotifyContext);
 
@@ -156,6 +156,12 @@ export function SmartHomeReactApp() {
     });
   }, []);
 
+  useEffect(() => {
+    window.api.receive("fromMain_background", (image: string) => {
+      setBackground(image)
+    });
+  }, []);
+
   const Footer = () => <Grid container spacing={1} className={classes.paper}>
     <Grid item xs={10}>
       <Typography> {Object.keys(footerInfo).reduce(
@@ -171,7 +177,7 @@ export function SmartHomeReactApp() {
 
 
   return (
-    <Container className={classes.root} >
+    <Container className={classes.root} style={{ backgroundImage: `url(${background})`, }} >
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <CurrentWeatherUI />
@@ -208,7 +214,5 @@ export function SmartHomeReactApp() {
     </Container>
   );
 }
-function rgba(arg0: number, arg1: number, arg2: number, arg3: number): string | import("@material-ui/styles").PropsFunc<{}, string | undefined> | undefined {
-  throw new Error("Function not implemented.");
-}
+
 
