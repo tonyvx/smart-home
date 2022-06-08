@@ -42,17 +42,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   listHorizontalDisplay: {
     display: "inline-flex",
-    width: 1400,
     overflowY: "auto",
     height: 300,
-    margin: 16,
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
 
   listDisplay: {
-    width: 1400,
     overflowY: "auto",
-    height: 300, margin: 16,
+    height: 300,
     '&::-webkit-scrollbar': {
       width: 10
     },
@@ -69,7 +66,6 @@ export const useStyles = makeStyles((theme) => ({
       background: '#000'
     },
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
-
   },
 }));
 
@@ -179,20 +175,21 @@ export function SmartHomeReactApp() {
   return (
     <Container className={classes.root} style={{ backgroundImage: `url(${background})`, }} >
       <Grid container spacing={3}>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <CurrentWeatherUI />
         </Grid>
-        <Grid item xs={6} style={{ padding: 16 }}>
+        <Grid item xs={4}></Grid>
+        <Grid item xs={4} style={{ padding: 16 }}>
           <Clock />
           <SpotifyPlayer />
         </Grid>
-        <Grid item xs={12} style={{ padding: 16 }}>
-          <Typography align="center" variant="h4" style={{ margin: 16 }}>
+        <Grid item xs={12} style={{ padding: 8 }}>
+          <Typography align="center" variant="h5" style={{ margin: 8, backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
             News
           </Typography>
         </Grid>
-        <Grid item xs={12} style={{ padding: 16 }}>
-          <List className={classes.listDisplay} style={{ margin: 16 }}>
+        <Grid item xs={12} style={{ padding: 8 }}>
+          <List className={classes.listDisplay} style={{ margin: 8 }}>
             {Array.isArray(news) && news.length > 0 && (news.map((newsItem, i) =>
               <ListItem key={i}>
                 <Container>
@@ -205,7 +202,7 @@ export function SmartHomeReactApp() {
             )
             )}</List>
         </Grid>
-        <Grid item xs={12} style={{ padding: 16 }}>
+        <Grid item xs={12} style={{ padding: 8 }}>
           <SpotifyRecentlyPlayed />
         </Grid>
       </Grid>
