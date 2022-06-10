@@ -41,13 +41,15 @@ function createWindow() {
 
   const expressApp = express();
   mainWindow = new BrowserWindow({
-    width: 1920,
-    height: 1080,
+    width: 1280,
+    height: 1024,
     autoHideMenuBar: true,
+    icon: "./public/smart-home.png",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true, // protect against prototype pollution
+    
     },
   });
 

@@ -12,7 +12,9 @@
     "fe-build": "cd react-app && npx webpack && cp smart-home-app/public/main.js public/main.js",
     "start": "cd smart-home-app && npx electron smart-home.js",
     "dist": "electron-builder --linux -c.extraMetadata.main=smart-home-app/smart-home.js",
-    "rpi": "electron-builder -c.extraMetadata.main=smart-home-app/smart-home.js --linux --armv7l"
+    "rpi": "electron-builder -c.extraMetadata.main=smart-home-app/smart-home.js --linux --armv7l",
+    "win": "electron-builder -c.extraMetadata.main=smart-home-app/smart-home.js --win=portable",
+    "mac": "electron-builder -c.extraMetadata.main=smart-home-app/smart-home.js --mac=dmg"
   },
   "keywords": [],
   "license": "ISC",
@@ -62,6 +64,17 @@
         "appImage"
       ]
     },
-    "deb": {}
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "../public/smart-home.png"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "../public/smart-home.png"
+    }
   }
 }
