@@ -61,7 +61,7 @@ export const CurrentWeatherUI = () => {
             forecast.weather &&
             forecast.weather.temp_max &&
             forecast.weather.temp_min && (<>
-              <Typography variant="h6" align="center">
+              <Typography variant="h5" align="center">
                 {Math.round(forecast.weather.temp_max)}&deg; F
               </Typography>
 
@@ -76,7 +76,7 @@ export const CurrentWeatherUI = () => {
             forecast.weather &&
             forecast.weather.temp_max &&
             forecast.weather.temp_min && (<>
-              <Typography variant="h6" align="center">
+              <Typography variant="h5" align="center">
                 {Math.round(forecast.weather.temp_min)}&deg; F
               </Typography>
 
@@ -93,7 +93,7 @@ export const CurrentWeatherUI = () => {
 
         <Grid item xs={3} />
         <Grid item xs={6}>
-          <Typography variant="subtitle1" align="center">
+          <Typography variant="h5" align="center">
             Feels like
             {feelsLikeTemp}&deg; F
           </Typography>

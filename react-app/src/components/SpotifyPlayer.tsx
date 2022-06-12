@@ -28,10 +28,10 @@ export const SpotifyPlayer = () => {
     }}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Typography variant="h5" align="center" style={{ height: "1.5rem" }}>
-            {currentTrack.track ? `${currentTrack.track} - ${currentTrack.artist} (${volume} %)` : " "}
+          <Typography variant="h5" align="center" style={{ height: "1.5rem" }} noWrap={true}>
+            {currentTrack.track ? `${currentTrack.track} - ${currentTrack.artist}` : " "}
           </Typography>
-          <Typography variant="h5" align="center" style={{ height: "1.5rem" }}>
+          <Typography variant="h5" align="center" style={{ height: "1.5rem" }} noWrap={true}>
             {currentTrack.track ? playlist : " "}
           </Typography>
         </Grid>
@@ -91,7 +91,7 @@ export const SpotifyPlayer = () => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant="overline" align={'center'} component="div" style={{ height: "1.5rem" }}>
-            {context?.playBackState?.device ? `${context?.playBackState?.device?.type} : ${context?.playBackState?.device?.name}` : " "}
+            {context?.playBackState?.device ? `${context?.playBackState?.device?.type} : ${context?.playBackState?.device?.name} (${volume}%)` : " "}
           </Typography>
         </Grid>
       </Grid>

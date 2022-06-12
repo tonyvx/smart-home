@@ -18,10 +18,9 @@ import { initialState as spotifyInitialState, MusicTrack, Playlist, reducer as s
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: "100vw",
     height: "100vh",
-    maxWidth: 1700,
-    backgroundSize: "100%"
+    maxWidth: "100vw",
   },
   paper: {
     padding: theme.spacing(1),
@@ -44,7 +43,6 @@ export const useStyles = makeStyles((theme) => ({
     display: "inline-flex",
     overflowY: "auto",
     height: 300,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
 
   listDisplay: {
@@ -173,7 +171,7 @@ export function SmartHomeReactApp() {
 
 
   return (
-    <Container className={classes.root} style={{ backgroundImage: `url(${background})`, }} >
+    <Container className={classes.root} style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} >
       <Grid container spacing={3}>
         <Grid item xs={4}>
           <CurrentWeatherUI />
@@ -193,7 +191,7 @@ export function SmartHomeReactApp() {
             {Array.isArray(news) && news.length > 0 && (news.map((newsItem, i) =>
               <ListItem key={i}>
                 <Container>
-                  <Typography variant="h6" style={{ margin: 2 }}>
+                  <Typography variant="h5" style={{ margin: 2 }}>
                     {newsItem.title}
                   </Typography>
                   <Divider />
@@ -205,9 +203,9 @@ export function SmartHomeReactApp() {
         <Grid item xs={12} style={{ padding: 8 }}>
           <SpotifyRecentlyPlayed />
         </Grid>
+        <Footer />
       </Grid>
       <Settings open={context.showSettings} />
-      <Footer />
     </Container>
   );
 }
