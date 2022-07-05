@@ -6,6 +6,7 @@ export interface AppCredentials {
     AUTHORIZATION: string;
     OPENWEATHER_TOKEN: string;
     DEVICE_ID: string;
+    IP_LOCATION_API_KEY: string;
 }
 export function setupSecrets(message: AppCredentials, store: Store) {
     try {

@@ -115,7 +115,7 @@ function createWindow() {
   });
 
   expressApp.listen(port, () => {
-    logger("listening at", "http://localhost:${port}`");
+    logger("listening at", `http://localhost:${port}`);
   });
 }
 

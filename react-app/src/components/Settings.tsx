@@ -30,6 +30,7 @@ export interface AppCredentials {
   OPENWEATHER_TOKEN?: string;
   BACKGROUND_FOLDER?: string;
   showSettingsPage: boolean;
+  IP_LOCATION_API_KEY?: string;
 }
 
 export const Settings = (props: { open: boolean }) => {
@@ -82,6 +83,10 @@ export const Settings = (props: { open: boolean }) => {
       <ListItem >
         <ListItemText primary="Folder containing background pictures" secondary="Photos will randomly selected from folder for use as wallpaper" />
         <TextField name="BACKGROUND_FOLDER" id="standard-basic" label="Background picture folder" color="secondary" style={{ marginRight: 8 }} value={data["BACKGROUND_FOLDER"]} onChange={setupData} />
+      </ListItem>
+      <ListItem >
+        <ListItemText primary="API Key for ipbase.com" secondary="API Key for ipbase.com to identify location from ip" />
+        <TextField name="IP_LOCATION_API_KEY" id="standard-basic" label="API Key" color="secondary" style={{ marginRight: 8 }} value={data["IP_LOCATION_API_KEY"]} onChange={setupData} />
       </ListItem>
 
       <Divider />
